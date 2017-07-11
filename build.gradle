@@ -15,4 +15,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.h2database/h2
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.196'
 
+    // https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
+    compile group: 'com.googlecode.lanterna', name: 'lanterna', version: '2.1.8'
+
 }
