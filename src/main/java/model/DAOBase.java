@@ -16,13 +16,15 @@ public abstract class DAOBase {
     private static final String DB_USER         = "";
     private static final String DB_PASSWORD     = "";
 
-    protected static Connection getDBConnection() throws SQLException {
+    static {
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
+    }
 
+    protected static Connection getDBConnection() throws SQLException {
         return DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
     }
 }
