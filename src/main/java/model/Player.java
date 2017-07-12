@@ -1,7 +1,7 @@
 package model;
 
 import java.util.List;
-import java.util.Stack;
+import java.util.Map;
 
 /**
  * The player of a game
@@ -18,7 +18,7 @@ public class Player {
     public int maxHealth;
     public Weapon weapon;
     public Area currentArea;
-    public List<Ability> abilities;
+    public Map<String, Ability> abilities;
 
     /**
      * Changes the player's health by the specified amount

@@ -17,7 +17,8 @@ public class PlayerDAO extends DAOBase {
     private static final String GET_ALL_PLAYERS     = "SELECT name FROM players;";
     private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM players WHERE player.name = ?;";
     private static final String SAVE_PLAYER         = "INSERT INTO players (name, strength, defence, experience, currentHealth, maxHealth, weapon_id, currentArea_id) VALUES (?,?,?,?,?,?,?,?)";
-    private static final String CREATE_PLAYER_TABLE = "CREATE TABLE players(" +
+    private static final String CREATE_PLAYER_TABLE =
+            "CREATE TABLE players(" +
              "name          varchar(255)    not null    primary key" +
             ",strength      smallint        not null" +
             ",defence       smallint        not null" +
