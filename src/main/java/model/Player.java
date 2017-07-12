@@ -1,6 +1,7 @@
 package model;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * The player of a game
@@ -10,13 +11,14 @@ import java.util.List;
  */
 public class Player {
     public String name;
-    public byte strength;
-    public byte defence;
+    public short strength;
+    public short defence;
     public int experience;
     public int currentHealth;
     public int maxHealth;
     public Weapon weapon;
     public Area currentArea;
+    public List<Ability> abilities;
 
     /**
      * Changes the player's health by the specified amount

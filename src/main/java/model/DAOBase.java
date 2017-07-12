@@ -24,7 +24,7 @@ public abstract class DAOBase {
         }
     }
 
-    protected static Connection getDBConnection() throws SQLException {
+    protected Connection getDBConnection() throws SQLException {
         return DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
     }
 }
