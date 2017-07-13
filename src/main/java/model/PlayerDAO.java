@@ -46,7 +46,21 @@ public class PlayerDAO extends DAOBase {
      * Saves the given player to the database
      */
     public void save(Player player) {
-
+        try {
+            Connection connection = getDBConnection();
+            PreparedStatement savePlayerStatement = connection.prepareStatement(SAVE_PLAYER);
+            savePlayerStatement.setString(1, player.name);
+            savePlayerStatement.setShort(2, player.defence);
+            savePlayerStatement.setShort(3, player.defence);
+            savePlayerStatement.setInt(4, player.experience);
+            savePlayerStatement.setInt(5, player.currentHealth);
+            savePlayerStatement.setInt(6, player.maxHealth);
+            savePlayerStatement.setInt(7, player.weapon.id);
+            savePlayerStatement.setInt(8, player.currentArea.id);
+            savePlayerStatement.execute();
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not save player " + player.name, e);
+        }
     }
 
     public List<String> getNamesOfAllPlayers() {
