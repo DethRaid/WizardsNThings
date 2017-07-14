@@ -98,7 +98,7 @@ public class PlayerDAO extends DAOBase {
                 int areaId = rs.getInt("areaId");
                 player.currentArea = areaDAO.getArea(areaId);
 
-                player.abilities = abilityDAO.getAllAbilitiesForPlayer(player.name);
+                player.abilities = abilityDAO.getAllAbilitiesForPlayer(player);
 
                 return player;
             } else {
