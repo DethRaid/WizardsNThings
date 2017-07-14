@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -24,7 +25,12 @@ public abstract class DAOBase {
         }
     }
 
-    protected Connection getDBConnection() throws SQLException {
+    Connection getDBConnection() throws SQLException {
         return DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
+    }
+
+    PreparedStatement prepareStatement(String statement) throws SQLException {
+        Connection connection = getDBConnection();
+        return connection.prepareStatement(statement);
     }
 }

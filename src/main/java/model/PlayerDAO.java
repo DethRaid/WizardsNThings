@@ -1,6 +1,5 @@
 package model;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,8 +32,7 @@ public class PlayerDAO extends DAOBase {
 
     public void createTable() {
         try {
-            Connection connection = getDBConnection();
-            PreparedStatement createTableStatement = connection.prepareStatement(CREATE_PLAYER_TABLE);
+            PreparedStatement createTableStatement = prepareStatement(CREATE_PLAYER_TABLE);
             createTableStatement.execute();
 
         } catch(SQLException e) {
@@ -47,8 +45,7 @@ public class PlayerDAO extends DAOBase {
      */
     public void save(Player player) {
         try {
-            Connection connection = getDBConnection();
-            PreparedStatement savePlayerStatement = connection.prepareStatement(SAVE_PLAYER);
+            PreparedStatement savePlayerStatement = prepareStatement(SAVE_PLAYER);
             savePlayerStatement.setString(1, player.name);
             savePlayerStatement.setShort(2, player.defence);
             savePlayerStatement.setShort(3, player.defence);
@@ -65,8 +62,7 @@ public class PlayerDAO extends DAOBase {
 
     public List<String> getNamesOfAllPlayers() {
         try {
-            Connection connection = getDBConnection();
-            PreparedStatement getNamesStatement = connection.prepareStatement(GET_ALL_PLAYERS);
+            PreparedStatement getNamesStatement = prepareStatement(GET_ALL_PLAYERS);
             ResultSet rs = getNamesStatement.executeQuery();
 
             List<String> names = new ArrayList<>();
@@ -82,8 +78,7 @@ public class PlayerDAO extends DAOBase {
 
     public Player getPlayer(String playerName) {
         try {
-            Connection connection = getDBConnection();
-            PreparedStatement loadPlayerStatement = connection.prepareStatement(GET_PLAYER_BY_NAME);
+            PreparedStatement loadPlayerStatement = prepareStatement(GET_PLAYER_BY_NAME);
             loadPlayerStatement.setString(1, playerName);
             ResultSet rs = loadPlayerStatement.executeQuery();
 
@@ -107,7 +102,7 @@ public class PlayerDAO extends DAOBase {
 
                 return player;
             } else {
-                throw new IllegalArgumentException("Player name " + playerName + " does not exist");
+                throw new RuntimeException("Player name " + playerName + " does not exist");
             }
 
         } catch(SQLException e) {

@@ -5,10 +5,13 @@ package model;
  * @since 7/11/17.
  */
 public class Area {
+    public int id;
     public String name;
     public String description;
     public Treasure treasure;
-    public List<Enemy> enemies;
+
+    // Map from enemy to the number of enemies in the area
+    public Map<Enemy, Integer> enemies;
 
     /**
      * Returns the level of this area
