@@ -30,7 +30,7 @@ public class PlayerDAO extends DAOBase {
     private AreaDAO areaDAO = new AreaDAO();
     private AbilityDAO abilityDAO = new AbilityDAO();
 
-    public void createTable() {
+    public static void createTable() {
         try {
             PreparedStatement createTableStatement = prepareStatement(CREATE_PLAYER_TABLE);
             createTableStatement.execute();

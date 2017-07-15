@@ -35,7 +35,7 @@ public class AbilityDAO extends DAOBase {
             ");";
     private static String GET_ABILITY = "SELECT * FROM ability WHERE ability.id = ?";
 
-    public void createTables() {
+    public static void createTables() {
         try {
             PreparedStatement createAbilitytableStatement = prepareStatement(CREATE_ABILITY_TABLE);
             createAbilitytableStatement.execute();

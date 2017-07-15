@@ -21,7 +21,7 @@ public class TreasureDAO extends DAOBase {
 
     private final WeaponDAO weaponDAO = new WeaponDAO();
 
-    public void createTable() {
+    public static void createTable() {
         try {
             PreparedStatement createTableStatement = prepareStatement(CREATE_TABLE);
             createTableStatement.execute();

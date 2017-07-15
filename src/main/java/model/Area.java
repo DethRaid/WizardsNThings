@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Map;
+
 /**
  * @author ddubois
  * @since 7/11/17.

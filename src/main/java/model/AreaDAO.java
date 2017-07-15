@@ -1,10 +1,13 @@
 package model;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ddubois
@@ -31,7 +34,7 @@ public class AreaDAO extends DAOBase {
     private final TreasureDAO treasureDAO = new TreasureDAO();
     private final EnemyDAO enemyDAO = new EnemyDAO();
 
-    public void createTables() {
+    public static void createTables() {
         try {
             PreparedStatement createAreaTableStatement = prepareStatement(CREATE_AREA_TABLE);
             createAreaTableStatement.execute();
@@ -62,13 +65,16 @@ public class AreaDAO extends DAOBase {
 
             area.enemies = getEnemiesInArea(areaId);
 
+            return area;
+
         } catch(SQLException e) {
             throw new RuntimeException("Could not retrieve area with id " + areaId, e);
         }
     }
 
     public List<Area> getAreasInLevelRange(int maxLevel, int numAreas) {
-
+        // TODO
+        throw new NotImplementedException();
     }
 
     public Map<Enemy, Integer> getEnemiesInArea(int areaId) {
