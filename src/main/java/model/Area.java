@@ -21,6 +21,7 @@ public class Area {
      * @return The level of the room
      */
     public int getLevel() {
+
         return 0;
     }
 }
