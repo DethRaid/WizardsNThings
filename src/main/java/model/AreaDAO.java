@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ddubois
@@ -59,20 +60,21 @@ public class AreaDAO extends DAOBase {
 
             area.treasure = treasureDAO.getTreasure(areaResult.getInt("treasure_id"));
 
-            area.enemies = getEnemiesInArea(areaId);
+            //area.enemies = getEnemiesInArea(areaId);
+            return area;
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not retrieve area with id " + areaId, e);
         }
     }
 
-    public List<Area> getAreasInLevelRange(int maxLevel, int numAreas) {
+   // public List<Area> getAreasInLevelRange(int maxLevel, int numAreas) {
 
-    }
+   // }
 
-    public Map<Enemey, Integer> getEnemiesInArea(int areaId) {
+   // public Map<Enemy, Integer> getEnemiesInArea(int areaId) {
 
-    }
+   // }
 
     public void setAreaAsCleared(int areaId, int playerId) {
 

@@ -1,8 +1,17 @@
 group 'balmerpeak'
 version '1.0-SNAPSHOT'
+apply plugin: 'application'
+apply plugin: 'idea'
 
 apply plugin: 'java'
 
+mainClassName = 'view.GameView'
+
+// tag::jar[]
+jar {
+    baseName = 'WizardsNThings'
+    version =  '1.0-SNAPSHOT'
+}
 sourceCompatibility = 1.8
 
 repositories {
@@ -16,5 +25,5 @@ dependencies {
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.196'
 
     // https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
-    compile group: 'com.googlecode.lanterna', name: 'lanterna', version: '2.1.8'
+    compile group: 'com.googlecode.lanterna', name: 'lanterna', version: '3.0.0-rc1'
 }

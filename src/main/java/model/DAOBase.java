@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @since 7/11/17.
  */
 public abstract class DAOBase {
-    private static final String DB_DRIVER       = "org.h2.Driver";
+    private static final String DB_DRIVER       = "org.h2.GameView";
     private static final String DB_CONNECTION   = "jdbc:h2:~/test";
     private static final String DB_USER         = "";
     private static final String DB_PASSWORD     = "";
