@@ -1,8 +1,11 @@
 package model;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +15,7 @@ import java.util.Map;
  */
 public class AreaDAO extends DAOBase {
     private static final String GET_AREA_BY_ID = "SELECT * FROM area WHERE area.id = ?;";
-    private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_id FROM area_enemies WHERE area_enemies.area_id = ?;";
+    private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_id, count FROM area_enemies WHERE area_enemies.area_id = ?;";
 
     private static final String CREATE_AREA_TABLE =
             "CREATE TABLE area(" +
@@ -31,7 +34,7 @@ public class AreaDAO extends DAOBase {
     private final TreasureDAO treasureDAO = new TreasureDAO();
     private final EnemyDAO enemyDAO = new EnemyDAO();
 
-    public void createTables() {
+    public static void createTables() {
         try {
             PreparedStatement createAreaTableStatement = prepareStatement(CREATE_AREA_TABLE);
             createAreaTableStatement.execute();
@@ -60,7 +63,8 @@ public class AreaDAO extends DAOBase {
 
             area.treasure = treasureDAO.getTreasure(areaResult.getInt("treasure_id"));
 
-            //area.enemies = getEnemiesInArea(areaId);
+            area.enemies = getEnemiesInArea(areaId);
+
             return area;
 
         } catch(SQLException e) {
@@ -68,13 +72,30 @@ public class AreaDAO extends DAOBase {
         }
     }
 
-   // public List<Area> getAreasInLevelRange(int maxLevel, int numAreas) {
+    public List<Area> getAreasInLevelRange(int maxLevel, int numAreas) {
+        // TODO
+        throw new NotImplementedException();
+    }
 
-   // }
+    public Map<Enemy, Integer> getEnemiesInArea(int areaId) {
+        try {
+            PreparedStatement getEnemiesInAreaStatement = prepareStatement(GET_ENEMIES_IN_AREA);
+            getEnemiesInAreaStatement.setInt(1, areaId);
+            ResultSet rs = getEnemiesInAreaStatement.executeQuery();
 
-   // public Map<Enemy, Integer> getEnemiesInArea(int areaId) {
+            Map<Enemy, Integer> enemies = new HashMap<>();
+            while(rs.next()) {
+                Enemy enemy = enemyDAO.getEnemy(rs.getInt("enemy_id"));
+                Integer count = rs.getInt("count");
+                enemies.put(enemy, count);
+            }
 
-   // }
+            return enemies;
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not get the enemies in area " + areaId, e);
+        }
+    }
 
     public void setAreaAsCleared(int areaId, int playerId) {
 

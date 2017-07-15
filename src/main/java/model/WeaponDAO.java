@@ -18,7 +18,7 @@ public class WeaponDAO extends DAOBase {
             ",attack_speed  INT             NOT NULL" +
             ");";
 
-    public void createTable() {
+    public static void createTable() {
         try {
             PreparedStatement statement = prepareStatement(CREATE_TABLE);
             statement.execute();
