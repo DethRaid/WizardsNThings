@@ -3,6 +3,7 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialog;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
+import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -10,15 +11,22 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
+import model.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
- * @author ddubois
- * @since 7/11/17.
+ * @author Susan Lunn
  */
 public class GameView {
+
+    public static Area currArea;
+    public static Player player;
+
 
     /*
      * Lanterna's terminal.
@@ -51,8 +59,6 @@ public class GameView {
         screen = new TerminalScreen(terminal);
         screen.setCursorPosition(null);		// Hack to hide cursor.
         screen.startScreen();				// terminal enters in private mode,
-
-
 
     }
 
@@ -103,19 +109,199 @@ public class GameView {
                 .addAction("New Game", new Runnable() {
                     @Override
                     public void run() {
-                        // Do 1st thing...
+                        startNewGame();
+                        return;
                     }
                 })
                 .addAction("Previous Saves", new Runnable() {
                     @Override
                     public void run() {
-                        // Do 2nd thing...
+                        listPreviousSaves();
                     }
                 })
                 .build()
                 .showDialog(gui);
 
     }
+
+    /**
+     * Creates a new player using inputted string and starts the game
+     */
+    private void startNewGame() {
+        String player = new TextInputDialogBuilder()
+                .setTitle("New Player Name")
+                .setDescription("Enter your player's name")
+                .build()
+                .showDialog(gui);
+        screen.clear();
+        // set current area -> call to controller ( pick first area in list of areas)
+        // go create a player in controller and have them send it back
+    }
+
+    private void listPreviousSaves(){
+        // find list of players from database
+
+    }
+
+    /**
+     * Renders the entire area, including description and player actions
+     */
+    private void renderArea(){
+
+    }
+
+    /**
+     * Renders an area's enemies and description
+     */
+    private void renderAreaDescription(){
+
+    }
+
+    /**
+     * Renders area treasure description
+     */
+    private void renderTreasureDescription(){
+          new ActionListDialogBuilder()
+                .setTitle("Reward")
+                .setDescription("A treasure chest springs open before you, do you wish to change weapons?")
+                .addAction("Change to " + currArea.treasure.weapon.toString(), new Runnable() {
+                    @Override
+                    public void run() {
+                        //switchWeapon(player, currArea.treasure.weapon)
+                        renderPlayerOptionsRoom();
+                    }
+                })
+                .addAction("Keep current " + player.weapon.toString(), new Runnable() {
+                    @Override
+                    public void run() {
+                        renderPlayerOptionsRoom();
+                    }
+                })
+                .setCanCancel(false)
+                .build()
+                .showDialog(gui);
+    }
+
+    /**
+     * Render's a player's options during combat phase
+     * Options are:
+     *
+     * 1) Attack with weapon
+     * 2) Select ability
+     */
+    private void renderPlayerOptionsCombat(){
+        new ActionListDialogBuilder()
+                .setTitle("Combat Phase")
+                .setDescription("Defeat the enemies to move forward!")
+                .addAction("Attack with " + player.weapon.toString(), new Runnable() {
+                    @Override
+                    public void run() {
+                        selectPlayerTarget();
+                    }
+                })
+                .addAction("Select Ability", new Runnable() {
+                    @Override
+                    public void run() {
+                        selectPlayerAbility();
+                    }
+                })
+                .build()
+                .showDialog(gui);
+    }
+
+    /**
+     * Selects enemy for player to attack
+     */
+    public void selectPlayerTarget(){
+        Map<Enemy, Integer> enemies = currArea.enemies;
+        ActionListBox list = new ActionListBox();
+        enemies.forEach((enemy, number) -> {
+            for(int i = 0; i < number; i++){
+                list.addItem(enemy.name + " " +String.valueOf(i), new Runnable() {
+                    @Override
+                    public void run() {
+                        // attackWeapon(player.Weapon, enemy)
+                        renderArea();
+                    }
+                });
+            }
+        });
+
+    }
+
+    /**
+     * Select player ability during combat phase
+     */
+    public void selectPlayerAbility() {
+        Map<String, Ability> abilities = player.abilities;
+        ActionListBox list = new ActionListBox();
+        abilities.forEach((name, ability) -> {
+            list.addItem(name, new Runnable() {
+                @Override
+                public void run() {
+                    // ask controller to cast ability -> send Ability
+                    // renderArea()
+                }
+            });
+        });
+        list.addItem("Cancel", new Runnable() {
+            @Override
+            public void run() {
+                renderPlayerOptionsCombat();
+            }
+        });
+    }
+
+    /**
+     * Select direction player can move in after combat phase
+     *
+     * 1) Move North
+     * 2) Move South
+     * 3) Move West
+     * 4) Move East
+     */
+    private void renderPlayerOptionsRoom() {
+        // obtain list of areas from controller, pick the top four
+        List<Area> areas = new ArrayList<Area>(); // obtain from controller
+        new ActionListDialogBuilder()
+                .setTitle("Pick the next direction")
+                .setDescription("Around you, four doors open. Chose wisely...")
+                .addAction("North - " + areas.get(0).description, new Runnable() {
+                    @Override
+                    public void run() {
+                        currArea = areas.get(0);
+                        renderArea();
+                    }
+                })
+                .addAction("South - " + areas.get(1).description, new Runnable() {
+                    @Override
+                    public void run() {
+                        currArea = areas.get(1);
+                        renderArea();
+                    }
+                })
+                .addAction("West - " + areas.get(2).description, new Runnable() {
+                    @Override
+                    public void run() {
+                        // set currArea as cleared
+                        currArea = areas.get(2);
+                        renderArea();
+                    }
+                })
+                .addAction("East - " + areas.get(3).description, new Runnable() {
+                    @Override
+                    public void run() {
+                        // set currArea as cleared
+                        currArea = areas.get(3);
+                        renderArea();
+                    }
+                })
+                .setCanCancel(false)
+                .build()
+                .showDialog(gui);
+
+    }
+
 
     public static void main(String[] args) throws IOException{
         GameView wizardsGame = new GameView();
