@@ -26,6 +26,12 @@ public class PlayerDAO extends DAOBase {
             ",maxHealth     int             not null" +
             ");";
 
+    private static String CREATE_PLAYER_ABILITY_TABLE =
+            "CREATE TABLE player_abilities(" +
+             "player_id INT NOT NULL" +
+            ",ability_id INT NOT NULL" +
+            ");";
+
     private WeaponDAO weaponDAO = new WeaponDAO();
     private AreaDAO areaDAO = new AreaDAO();
     private AbilityDAO abilityDAO = new AbilityDAO();
@@ -37,6 +43,13 @@ public class PlayerDAO extends DAOBase {
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the players table", e);
+        }
+
+        try {
+            PreparedStatement createAbilityTableStatement = prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
+            createAbilityTableStatement.execute();
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not create the player ability table", e);
         }
     }
 
