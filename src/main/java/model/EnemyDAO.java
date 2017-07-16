@@ -12,9 +12,7 @@ public class EnemyDAO extends DAOBase {
     private static String CREATE_ENEMY_TABLE =
             "CREATE TABLE enemy(" +
                     "name VARCHAR(128)  NOT NULL PRIMARY KEY" +
-                    ",max_health INT NOT NULL" +
-                    ",strength INT NOT NULL" +
-                    ",defence INT NOT NULL" +
+                    ",level INT NOT NULL" +
                     ");";
 
     public static String GET_ENEMY = "SELECT * FROM enemy WHERE enemy.name = ?;";
@@ -37,9 +35,7 @@ public class EnemyDAO extends DAOBase {
             if(enemySet.next()) {
                 Enemy enemy = new Enemy();
                 enemy.name = enemySet.getString("name");
-                enemy.maxHealth = enemySet.getInt("max_health");
-                enemy.strength = enemySet.getInt("strength");
-                enemy.defense = enemySet.getInt("defence");
+                enemy.level = enemySet.getInt("level");
 
                 return enemy;
             }

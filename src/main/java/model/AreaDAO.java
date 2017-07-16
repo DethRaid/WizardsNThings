@@ -27,8 +27,14 @@ public class AreaDAO extends DAOBase {
 
     private static final String CREATE_AREA_ENEMIES_TABLE =
             "CREATE TABLE area_enemies(" +
-             "enemy_id  INT     NOT NULL" +
-            ",area_id   INT     NOT NULL" +
+             "enemy_name    VARCHAR(128)    NOT NULL" +
+            ",area_id       INT             NOT NULL" +
+            ");";
+
+    private static final String CREATE_CLEARED_AREAS_TABLE =
+            "CREATE TABLE cleared_areas(" +
+             "area_id   INT     NOT NULL" +
+            ",player_id INT     NOT NULL" +
             ");";
 
     private final TreasureDAO treasureDAO = new TreasureDAO();
@@ -39,10 +45,15 @@ public class AreaDAO extends DAOBase {
             PreparedStatement createAreaTableStatement = prepareStatement(CREATE_AREA_TABLE);
             createAreaTableStatement.execute();
 
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not create area_enemies table", e);
+        }
+
+        try {
             PreparedStatement createAreaEnemiesTable = prepareStatement(CREATE_AREA_ENEMIES_TABLE);
             createAreaEnemiesTable.execute();
         } catch(SQLException e) {
-            throw new RuntimeException("Could not create area_enemies table", e);
+            throw new RuntimeException("Could not create the area enemies table", e);
         }
     }
 
@@ -85,7 +96,7 @@ public class AreaDAO extends DAOBase {
 
             Map<Enemy, Integer> enemies = new HashMap<>();
             while(rs.next()) {
-                Enemy enemy = enemyDAO.getEnemy(String.valueOf(rs.getInt("enemy_id")));
+                Enemy enemy = enemyDAO.getEnemy(rs.getString("enemy_name"));
                 Integer count = rs.getInt("count");
                 enemies.put(enemy, count);
             }
@@ -95,9 +106,5 @@ public class AreaDAO extends DAOBase {
         } catch(SQLException e) {
             throw new RuntimeException("Could not get the enemies in area " + areaId, e);
         }
-    }
-
-    public void setAreaAsCleared(int areaId, int playerId) {
-
     }
 }
