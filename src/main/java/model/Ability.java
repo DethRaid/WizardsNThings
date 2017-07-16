@@ -10,7 +10,7 @@ import static model.DAOBase.prepareStatement;
  * @author ddubois
  * @since 14-Jul-17
  */
-public class Ability {
+public class Ability implements ISaveable {
     public static String SAVE_ABILITY = "INSERT INTO ability(it, name, damage, num_targets, health_healed, description, level_available_to_player)" +
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
@@ -34,7 +34,8 @@ public class Ability {
         levelAvailableToPlayer = rs.getInt("level_available_to_player");
     }
 
-    void save() {
+    @Override
+    public void save() {
         try {
             PreparedStatement saveStatement = prepareStatement(SAVE_ABILITY);
             saveStatement.setInt(1, id);
