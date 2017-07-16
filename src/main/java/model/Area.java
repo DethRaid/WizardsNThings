@@ -1,12 +1,13 @@
 package model;
 
 import java.util.Map;
+import java.util.Observable;
 
 /**
  * @author ddubois
  * @since 7/11/17.
  */
-public class Area {
+public class Area extends Observable {
     public int id;
     public String name;
     public String description;

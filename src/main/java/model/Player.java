@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
 import static model.DAOBase.prepareStatement;
 
@@ -14,7 +15,7 @@ import static model.DAOBase.prepareStatement;
  * @author ddubois
  * @since 7/11/17.
  */
-public class Player implements ISaveable {
+public class Player extends Observable implements ISaveable {
     private static final String CHECK_FOR_PLAYER = "SELECT * FROM player WHERE player.name = ?;";
     private static final String SAVE_PLAYER = "UPDATE player " +
             "SET strength = ?, defence = ?, experience = ?, currentHealth = ?, maxHealth = ?, weapon_id = ?, currentArea_id = ?)" +

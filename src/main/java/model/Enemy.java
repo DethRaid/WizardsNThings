@@ -1,10 +1,12 @@
 package model;
 
+import java.util.Observable;
+
 /**
  * @author ddubois
  * @since 15-Jul-17
  */
-public class Enemy {
+public class Enemy extends Observable {
     public String name;
     public int level;
     public int curHealth;

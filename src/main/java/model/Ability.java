@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Observable;
 
 import static model.DAOBase.prepareStatement;
 
@@ -10,7 +11,7 @@ import static model.DAOBase.prepareStatement;
  * @author ddubois
  * @since 14-Jul-17
  */
-public class Ability implements ISaveable {
+public class Ability extends Observable implements ISaveable {
     public static String SAVE_ABILITY = "INSERT INTO ability(it, name, damage, num_targets, health_healed, description, level_available_to_player)" +
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
