@@ -34,11 +34,13 @@ public class AbilityDAO extends DAOBase {
             "SELECT ability_id FROM player_ability WHERE player_ability.player_name = ?" +
             ");";
     private static String GET_ABILITY = "SELECT * FROM ability WHERE ability.id = ?";
+    private static String GET_ABILITY_WITH_LEVEL = "SELECT * FROM ability WHERE ability.level_available_to_player = ?;";
 
     public static void createTables() {
         try {
             PreparedStatement createAbilitytableStatement = prepareStatement(CREATE_ABILITY_TABLE);
             createAbilitytableStatement.execute();
+
         } catch(SQLException e) {
             throw new RuntimeException("Could not create ability table", e);
         }
@@ -46,6 +48,7 @@ public class AbilityDAO extends DAOBase {
         try {
             PreparedStatement createPlayerAbilityTableStatement = prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
             createPlayerAbilityTableStatement.execute();
+
         } catch(SQLException e) {
             throw new RuntimeException("Could not create player_ability table", e);
         }
@@ -77,12 +80,26 @@ public class AbilityDAO extends DAOBase {
             }
 
             return abilities;
+
         } catch(SQLException e) {
             throw new RuntimeException("Could not get abilities for player " + player.name, e);
         }
     }
 
     public List<Ability> getAbilitiesWithLevel(int level) {
-        return null;
+        try {
+            PreparedStatement getAbilitiesStatement = prepareStatement(GET_ABILITY_WITH_LEVEL);
+            ResultSet rs = getAbilitiesStatement.executeQuery();
+
+            List<Ability> abilities = new ArrayList<>();
+            while(rs.next()) {
+                abilities.add(new Ability(rs));
+            }
+
+            return abilities;
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not get abilities with level " + level, e);
+        }
     }
 }

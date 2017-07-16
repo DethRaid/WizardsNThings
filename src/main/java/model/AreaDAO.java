@@ -107,8 +107,4 @@ public class AreaDAO extends DAOBase {
             throw new RuntimeException("Could not get the enemies in area " + areaId, e);
         }
     }
-
-    public void setAreaAsCleared(int areaId, int playerId) {
-
-    }
 }

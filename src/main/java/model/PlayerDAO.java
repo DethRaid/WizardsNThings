@@ -13,17 +13,18 @@ import java.util.List;
  * @since 7/11/17.
  */
 public class PlayerDAO extends DAOBase {
-    private static final String GET_ALL_PLAYERS     = "SELECT name FROM players;";
+    private static final String GET_ALL_PLAYERS     = "SELECT name FROM player;";
     private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM players WHERE player.name = ?;";
-    private static final String SAVE_PLAYER         = "INSERT INTO players (name, strength, defence, experience, currentHealth, maxHealth, weapon_id, currentArea_id) VALUES (?,?,?,?,?,?,?,?)";
     private static final String CREATE_PLAYER_TABLE =
             "CREATE TABLE players(" +
-             "name          varchar(255)    not null    primary key" +
-            ",strength      smallint        not null" +
-            ",defence       smallint        not null" +
-            ",experience    int             nul null" +
-            ",currentHealth int             not null" +
-            ",maxHealth     int             not null" +
+             "name              varchar(255)    not null    primary key" +
+            ",strength          smallint        not null" +
+            ",defence           smallint        not null" +
+            ",experience        int             nul null" +
+            ",currentHealth     int             not null" +
+            ",maxHealth         int             not null" +
+            ",weapon_id         INT             NOT NULL" +
+            ",currentArea_id    INT             NOT NULL" +
             ");";
 
     private static String CREATE_PLAYER_ABILITY_TABLE =
@@ -50,26 +51,6 @@ public class PlayerDAO extends DAOBase {
             createAbilityTableStatement.execute();
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the player ability table", e);
-        }
-    }
-
-    /**
-     * Saves the given player to the database
-     */
-    public void save(Player player) {
-        try {
-            PreparedStatement savePlayerStatement = prepareStatement(SAVE_PLAYER);
-            savePlayerStatement.setString(1, player.name);
-            savePlayerStatement.setShort(2, player.defence);
-            savePlayerStatement.setShort(3, player.defence);
-            savePlayerStatement.setInt(4, player.experience);
-            savePlayerStatement.setInt(5, player.currentHealth);
-            savePlayerStatement.setInt(6, player.maxHealth);
-            savePlayerStatement.setInt(7, player.weapon.id);
-            savePlayerStatement.setInt(8, player.currentArea.id);
-            savePlayerStatement.execute();
-        } catch(SQLException e) {
-            throw new RuntimeException("Could not save player " + player.name, e);
         }
     }
 
@@ -105,10 +86,10 @@ public class PlayerDAO extends DAOBase {
                 player.currentHealth = rs.getInt("currentHealth");
                 player.maxHealth = rs.getInt("maxHealth");
 
-                int weaponId = rs.getInt("weaponId");
+                int weaponId = rs.getInt("weapon_id");
                 player.weapon = weaponDAO.getWeapon(weaponId);
 
-                int areaId = rs.getInt("areaId");
+                int areaId = rs.getInt("currentArea_id");
                 player.currentArea = areaDAO.getArea(areaId);
 
                 player.abilities = abilityDAO.getAllAbilitiesForPlayer(player);
