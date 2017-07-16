@@ -85,7 +85,7 @@ public class AreaDAO extends DAOBase {
 
             Map<Enemy, Integer> enemies = new HashMap<>();
             while(rs.next()) {
-                Enemy enemy = enemyDAO.getEnemy(rs.getInt("enemy_id"));
+                Enemy enemy = enemyDAO.getEnemy(String.valueOf(rs.getInt("enemy_id")));
                 Integer count = rs.getInt("count");
                 enemies.put(enemy, count);
             }
