@@ -62,7 +62,8 @@ public class Controller {
      */
     public void createNewPlayer(String name){
         currentPlayer = new Player(name);
-        //TODO - Set the players' current weapon and area
+        //TODO - Set the players' current weapon
+        currentPlayer.currentArea = AreaDAO.getAreasInLevelRange(getPlayerLevel(), 1).get(0);
         currentPlayer.save();
         area = currentPlayer.currentArea;
         populateEnemies();
