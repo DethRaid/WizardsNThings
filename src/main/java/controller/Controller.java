@@ -18,10 +18,14 @@ public class Controller {
     TreasureDAO treasureDAO;
 
 
+    //Instances
     Map<Integer, Enemy> enemies;
     Area area;
     Player currentPlayer;
 
+    /**
+     * Constructor
+     */
     public Controller(){
         playerDAO = new PlayerDAO();
         areaDAO = new AreaDAO();
@@ -30,20 +34,36 @@ public class Controller {
         treasureDAO = new TreasureDAO();
     }
 
+    /**
+     * Set the current player to the player with the given name
+     * @param name - the name of the player
+     */
     public void setCurrentPlayer(String name){
         currentPlayer = playerDAO.getPlayer(name);
         area = currentPlayer.currentArea;
         populateEnemies();
     }
 
+    /**
+     * Set the current area to the given area
+     * @param a - the area to set
+     */
     public void setCurrentArea(Area a){
         area = a;
         currentPlayer.currentArea = a;
         populateEnemies();
     }
 
+
+    /**
+     * Create a new player and save them in the DB
+     *
+     * @param name the name of the new player
+     */
     public void createNewPlayer(String name){
-        currentPlayer = playerDAO.createPlayer(name);
+        currentPlayer = new Player(name);
+        //TODO - Set the players' current weapon and area
+        currentPlayer.save();
         area = currentPlayer.currentArea;
         populateEnemies();
     }
@@ -62,16 +82,10 @@ public class Controller {
     /**
      * Get a Map of all the enemies names in the current Area
      *
-     *
-     *
      * @return List of all enemies names
      */
-    public Map<Integer, String> getAllEnemies(){
-        Map<Integer, String> enemyNames = new HashMap<>();
-        enemies.forEach((id, enemy) -> {
-            enemyNames.put(id, enemy.name);
-        });
-        return enemyNames;
+    public Map<Integer, Enemy> getAllEnemies(){
+        return enemies;
     }
 
     /**
@@ -81,6 +95,15 @@ public class Controller {
      */
     public String getCurrentPlayerName(){
         return currentPlayer.name;
+    }
+
+    /**
+     * Get the player's current health
+     *
+     * @return player's current health
+     */
+    public int getPlayerHealth(){
+        return currentPlayer.currentHealth;
     }
 
     /**
@@ -109,8 +132,22 @@ public class Controller {
         return AreaDAO.getAreasInLevelRange(getPlayerLevel(), 4);
     }
 
+    /**
+     * Get the name of the treasure in the current area
+     *
+     * @return the name of the treasure
+     */
     public String getTreasure(){
         return area.treasure.name;
+    }
+
+    /**
+     * Check if all of the enemies are dead
+     *
+     * @return true if all are dead, false otherwise
+     */
+    public boolean areEnemiesAllDead(){
+        return (enemies.size() == 0);
     }
 
 
@@ -128,9 +165,13 @@ public class Controller {
     public void Attack(Integer enemyId){
         enemies.forEach((id, enemy) -> {
             if (id.equals(enemyId)){
-                enemy.changeHealth(calculatePlayerDamage(enemy));
+                enemy.changeHealth(calculatePlayerDamage(enemy) * -1);
+                if(enemy.isDead){
+                    enemies.remove(id, enemy);
+                    return;
+                }
             }
-            currentPlayer.changeHealth(calculateEnemyDamage(enemy));
+            currentPlayer.changeHealth(calculateEnemyDamage(enemy) * -1);
         });
     }
 
@@ -142,15 +183,21 @@ public class Controller {
     public void castAbility(String abilityName){
         Ability ability = currentPlayer.abilities.get(abilityName);
         if(ability.damage > 0){
-            enemies.values().forEach((enemy -> {
+            enemies.forEach((id ,enemy) -> {
                 enemy.changeHealth((ability.damage) * -1);
-            }));
+                if(enemy.isDead){
+                    enemies.remove(id, enemy);
+                }
+            });
         }
         else if(ability.healthHealed > 0){
             currentPlayer.changeHealth(ability.healthHealed);
         }
     }
 
+    /**
+     * Change the Player's current weapon to the weapon of the current area
+     */
     public void changeWeapon(){
         currentPlayer.weapon = area.treasure.weapon;
     }
@@ -169,6 +216,9 @@ public class Controller {
         return (currentPlayer.experience/10);
     }
 
+    /**
+     * Instantiate all of the enemies in the area and give them each a unique ID
+     */
     private void populateEnemies(){
         enemies = new HashMap<>();
         int ID = 0;
@@ -180,6 +230,11 @@ public class Controller {
         }
     }
 
+    /**
+     * Create a new instance of the given enemy
+     * @param e - the enemy to copy (like a template)
+     * @return - the new enemy
+     */
     private Enemy createNewEnemy(Enemy e){
         Enemy newEnemy = new Enemy();
         newEnemy.level = e.level;
