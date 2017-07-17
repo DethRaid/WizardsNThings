@@ -3,6 +3,7 @@ package model;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -33,6 +34,20 @@ public class Player extends Observable implements ISaveable {
     public Weapon weapon;
     public Area currentArea;
     public Map<String, Ability> abilities;
+
+    public Player(String name){
+        this.name = name;
+        this.strength = 5;
+        this.defence = 5;
+        this.experience = 0;
+        //Starting weapon will be set in the controller
+        this.weapon = null;
+        this.maxHealth = 10;
+        this.currentHealth = 10;
+        //Starting area will be set in the controller
+        this.currentArea = null;
+        this.abilities = new HashMap<>();
+    }
 
     /**
      * Changes the player's health by the specified amount

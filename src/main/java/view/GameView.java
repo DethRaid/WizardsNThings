@@ -12,9 +12,11 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
 import model.*;
+import controller.Controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +25,7 @@ import java.util.Map;
  * @author Susan Lunn
  */
 public class GameView {
-
-    public static Area currArea;
-    public static Player player;
+    public static Controller controller;
 
 
     /*
@@ -164,14 +164,14 @@ public class GameView {
           new ActionListDialogBuilder()
                 .setTitle("Reward")
                 .setDescription("A treasure chest springs open before you, do you wish to change weapons?")
-                .addAction("Change to " + currArea.treasure.weapon.toString(), new Runnable() {
+                .addAction("Change to " + controller.getTreasure(), new Runnable() {
                     @Override
                     public void run() {
-                        //switchWeapon(player, currArea.treasure.weapon)
+                        controller.changeWeapon();
                         renderPlayerOptionsRoom();
                     }
                 })
-                .addAction("Keep current " + player.weapon.toString(), new Runnable() {
+                .addAction("Keep current " + controller.getCurrentWeapon(), new Runnable() {
                     @Override
                     public void run() {
                         renderPlayerOptionsRoom();
@@ -193,7 +193,7 @@ public class GameView {
         new ActionListDialogBuilder()
                 .setTitle("Combat Phase")
                 .setDescription("Defeat the enemies to move forward!")
-                .addAction("Attack with " + player.weapon.toString(), new Runnable() {
+                .addAction("Attack with " + controller.getCurrentWeapon(), new Runnable() {
                     @Override
                     public void run() {
                         selectPlayerTarget();
@@ -213,18 +213,16 @@ public class GameView {
      * Selects enemy for player to attack
      */
     public void selectPlayerTarget(){
-        Map<Enemy, Integer> enemies = currArea.enemies;
+        Map<Integer, String> enemies = controller.getAllEnemies();
         ActionListBox list = new ActionListBox();
-        enemies.forEach((enemy, number) -> {
-            for(int i = 0; i < number; i++){
-                list.addItem(enemy.name + " " +String.valueOf(i), new Runnable() {
-                    @Override
-                    public void run() {
-                        // attackWeapon(player.Weapon, enemy)
-                        renderArea();
-                    }
-                });
-            }
+        enemies.forEach((id, enemy) -> {
+            list.addItem(enemy + " " + id, new Runnable() {
+                @Override
+                public void run() {
+                    controller.Attack(id);
+                    // renderArea();
+                }
+            });
         });
 
     }
@@ -233,13 +231,13 @@ public class GameView {
      * Select player ability during combat phase
      */
     public void selectPlayerAbility() {
-        Map<String, Ability> abilities = player.abilities;
+        Set<String> abilities = controller.getAbilities();
         ActionListBox list = new ActionListBox();
-        abilities.forEach((name, ability) -> {
+        abilities.forEach((name) -> {
             list.addItem(name, new Runnable() {
                 @Override
                 public void run() {
-                    // ask controller to cast ability -> send Ability
+                   controller.castAbility(name);
                     // renderArea()
                 }
             });
@@ -262,21 +260,21 @@ public class GameView {
      */
     private void renderPlayerOptionsRoom() {
         // obtain list of areas from controller, pick the top four
-        List<Area> areas = new ArrayList<Area>(); // obtain from controller
+        List<Area> areas = controller.getPossibleAreas();
         new ActionListDialogBuilder()
                 .setTitle("Pick the next direction")
                 .setDescription("Around you, four doors open. Chose wisely...")
                 .addAction("North - " + areas.get(0).description, new Runnable() {
                     @Override
                     public void run() {
-                        currArea = areas.get(0);
+                        controller.setCurrentArea(areas.get(0));
                         renderArea();
                     }
                 })
                 .addAction("South - " + areas.get(1).description, new Runnable() {
                     @Override
                     public void run() {
-                        currArea = areas.get(1);
+                        controller.setCurrentArea(areas.get(1));
                         renderArea();
                     }
                 })
@@ -284,7 +282,7 @@ public class GameView {
                     @Override
                     public void run() {
                         // set currArea as cleared
-                        currArea = areas.get(2);
+                        controller.setCurrentArea(areas.get(2));
                         renderArea();
                     }
                 })
@@ -292,7 +290,7 @@ public class GameView {
                     @Override
                     public void run() {
                         // set currArea as cleared
-                        currArea = areas.get(3);
+                        controller.setCurrentArea(areas.get(3));
                         renderArea();
                     }
                 })
