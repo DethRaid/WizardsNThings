@@ -62,6 +62,9 @@ public class Player extends Observable implements ISaveable {
         if(currentHealth <= 0) {
             // TODO: Fire player dead event
         }
+
+        setChanged();
+        notifyObservers(this);
     }
 
 

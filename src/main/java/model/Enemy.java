@@ -9,7 +9,7 @@ import java.util.Observable;
 public class Enemy extends Observable {
     public String name;
     public int level;
-    public int curHealth;
+    public int currentHealth;
     public boolean isDead;
 
     public int getStrength() {
@@ -22,5 +22,16 @@ public class Enemy extends Observable {
 
     public int getMaxHealth() {
         return level * 100;
+    }
+
+    public void changeHealth(int healthChange) {
+        currentHealth = Math.min(currentHealth + healthChange, getMaxHealth());
+
+        if(currentHealth <= 0) {
+            // TODO: Fire player dead event
+        }
+
+        setChanged();
+        notifyObservers(this);
     }
 }

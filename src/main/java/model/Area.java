@@ -19,7 +19,8 @@ public class Area extends Observable {
     /**
      * Returns the level of this area
      *
-     * <p>The level of the room is computed with totalLevel * 2 ^ (enemies.size() / 2), which is roughly equivalent to DND CRs</p>
+     * <p>The level of the room is computed with totalLevel * 2 ^ (enemies.size() / 2), which is roughly equivalent to
+     * DND CRs</p>
      *
      * @return The level of the room
      */

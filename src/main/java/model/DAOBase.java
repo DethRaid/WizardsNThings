@@ -13,7 +13,9 @@ import java.sql.SQLException;
  */
 public abstract class DAOBase {
     private static final String DB_DRIVER       = "org.h2.Driver";
-    private static final String DB_CONNECTION   = "jdbc:h2:~/test";
+    private static final String DB_CONNECTION   = "jdbc:h2:~/wizards_n_things;" +
+            "INIT=CREATE SCHEMA IF NOT EXISTS wizards_n_things\\;" +
+            "SET SCHEMA wizards_n_things;";
     private static final String DB_USER         = "";
     private static final String DB_PASSWORD     = "";
 
@@ -25,7 +27,7 @@ public abstract class DAOBase {
         }
     }
 
-    static Connection getDBConnection() throws SQLException {
+    private static Connection getDBConnection() throws SQLException {
         return DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
     }
 
