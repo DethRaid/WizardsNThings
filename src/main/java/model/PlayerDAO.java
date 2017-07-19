@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,25 +39,27 @@ public class PlayerDAO extends DAOBase {
     private AbilityDAO abilityDAO = new AbilityDAO();
 
     public static void createTable() {
-        try {
-            PreparedStatement createTableStatement = prepareStatement(CREATE_PLAYER_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createTableStatement = connection.prepareStatement(CREATE_PLAYER_TABLE);
             createTableStatement.execute();
+            connection.commit();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the players table", e);
         }
 
-        try {
-            PreparedStatement createAbilityTableStatement = prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createAbilityTableStatement = connection.prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
             createAbilityTableStatement.execute();
+            connection.commit();
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the player ability table", e);
         }
     }
 
     public List<String> getNamesOfAllPlayers() {
-        try {
-            PreparedStatement getNamesStatement = prepareStatement(GET_ALL_PLAYERS);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getNamesStatement = connection.prepareStatement(GET_ALL_PLAYERS);
             ResultSet rs = getNamesStatement.executeQuery();
 
             List<String> names = new ArrayList<>();
@@ -71,8 +74,8 @@ public class PlayerDAO extends DAOBase {
     }
 
     public Player getPlayer(String playerName) {
-        try {
-            PreparedStatement loadPlayerStatement = prepareStatement(GET_PLAYER_BY_NAME);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement loadPlayerStatement = connection.prepareStatement(GET_PLAYER_BY_NAME);
             loadPlayerStatement.setString(1, playerName);
             ResultSet rs = loadPlayerStatement.executeQuery();
 

@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,8 +20,8 @@ public class WeaponDAO extends DAOBase {
             ");";
     private static String GET_RANDOM_BAD_WEAPON =
             "SELECT * FROM weapon WHERE weapon.id IN (" +
-                    "SELECT id FROM weapon" +
-                    "ORDER BY weapon.attack_speed + weapon.damage DESC" +
+                    "SELECT id FROM weapon " +
+                    "ORDER BY weapon.attack_speed + weapon.damage DESC " +
                     "LIMIT 5)" +
                     "ORDER BY RAND()" +
                     "LIMIT 1;";
@@ -30,10 +31,12 @@ public class WeaponDAO extends DAOBase {
      *
      * <p>If the weapon table exists, then this method does nothing</p>
      */
-    public static void createTable() {
-        try {
-            PreparedStatement statement = prepareStatement(CREATE_TABLE);
+    public void createTable() {
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement statement = connection.prepareStatement(CREATE_TABLE);
             statement.execute();
+            connection.commit();
+
         } catch(SQLException e) {
             if(e.getMessage().contains("Table \"WEAPON\" already exists")) {
                 return;
@@ -43,12 +46,15 @@ public class WeaponDAO extends DAOBase {
     }
 
     public Weapon getWeapon(int id) {
-        try {
-            PreparedStatement statement = prepareStatement(GET_WEAPON_BY_ID);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement statement = connection.prepareStatement(GET_WEAPON_BY_ID);
             statement.setInt(1, id);
             ResultSet weaponSet = statement.executeQuery();
 
-            return makeWeapon(weaponSet);
+            if(weaponSet.next()) {
+                return makeWeapon(weaponSet);
+            }
+            throw new RuntimeException("Could not get weapon with ID " + id + ": ResultSet#next returned false");
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not get weapon with ID " + id, e);
@@ -64,8 +70,8 @@ public class WeaponDAO extends DAOBase {
      * @return One of the worst five weapons
      */
     public Weapon getStartingWeapon() {
-        try {
-            PreparedStatement findWeaponStatement = prepareStatement(GET_RANDOM_BAD_WEAPON);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement findWeaponStatement = connection.prepareStatement(GET_RANDOM_BAD_WEAPON);
             ResultSet rs = findWeaponStatement.executeQuery();
             if(rs.next()) {
                 return makeWeapon(rs);

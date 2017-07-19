@@ -1,11 +1,12 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Observable;
 
-import static model.DAOBase.prepareStatement;
+import static model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois
@@ -37,8 +38,8 @@ public class Ability extends Observable implements ISaveable {
 
     @Override
     public void save() {
-        try {
-            PreparedStatement saveStatement = prepareStatement(SAVE_ABILITY);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement saveStatement = connection.prepareStatement(SAVE_ABILITY);
             saveStatement.setInt(1, id);
             saveStatement.setString(2, name);
             saveStatement.setInt(3, damage);
@@ -47,6 +48,7 @@ public class Ability extends Observable implements ISaveable {
             saveStatement.setString(6, description);
             saveStatement.setInt(7, levelAvailableToPlayer);
             saveStatement.execute();
+            connection.commit();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not save ability " + name, e);

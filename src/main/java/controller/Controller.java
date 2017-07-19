@@ -11,11 +11,11 @@ import java.util.*;
 public class Controller {
 
     //DAO's
-    PlayerDAO playerDAO;
-    AreaDAO areaDAO;
-    EnemyDAO enemyDAO;
-    WeaponDAO weaponDAO;
-    TreasureDAO treasureDAO;
+    PlayerDAO playerDAO = new PlayerDAO();
+    AreaDAO areaDAO = new AreaDAO();
+    EnemyDAO enemyDAO = new EnemyDAO();
+    WeaponDAO weaponDAO = new WeaponDAO();
+    TreasureDAO treasureDAO = new TreasureDAO();
 
 
     //Instances
@@ -63,7 +63,7 @@ public class Controller {
     public void createNewPlayer(String name){
         currentPlayer = new Player(name);
         //TODO - Set the players' current weapon
-        currentPlayer.currentArea = AreaDAO.getAreasInLevelRange(getPlayerLevel(), 1).get(0);
+        currentPlayer.currentArea = areaDAO.getAreasInLevelRange(getPlayerLevel(), 1).get(0);
         currentPlayer.save();
         area = currentPlayer.currentArea;
         populateEnemies();
@@ -130,7 +130,7 @@ public class Controller {
      * @return a list of the possible areas
      */
     public List<Area> getPossibleAreas(){
-        return AreaDAO.getAreasInLevelRange(getPlayerLevel(), 4);
+        return areaDAO.getAreasInLevelRange(getPlayerLevel(), 4);
     }
 
     /**
@@ -239,7 +239,7 @@ public class Controller {
     private Enemy createNewEnemy(Enemy e){
         Enemy newEnemy = new Enemy();
         newEnemy.level = e.level;
-        newEnemy.curHealth = e.curHealth;
+        newEnemy.currentHealth = e.currentHealth;
         newEnemy.isDead = e.isDead;
         newEnemy.name = e.name;
         return newEnemy;

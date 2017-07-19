@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,17 +19,18 @@ public class EnemyDAO extends DAOBase {
     public static String GET_ENEMY = "SELECT * FROM enemy WHERE enemy.name = ?;";
 
     public static void createTable() {
-        try {
-            PreparedStatement createEnemeyTableStatement = prepareStatement(CREATE_ENEMY_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createEnemeyTableStatement = connection.prepareStatement(CREATE_ENEMY_TABLE);
             createEnemeyTableStatement.execute();
+            connection.commit();
         } catch(SQLException e) {
             throw new RuntimeException("Could not create enemy table", e);
         }
     }
 
     public Enemy getEnemy(String enemyName) {
-        try {
-            PreparedStatement getEnemyStatement = prepareStatement(GET_ENEMY);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getEnemyStatement = connection.prepareStatement(GET_ENEMY);
             getEnemyStatement.setString(1, enemyName);
             ResultSet enemySet = getEnemyStatement.executeQuery();
 

@@ -1,10 +1,11 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Observable;
 
-import static model.DAOBase.prepareStatement;
+import static model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois
@@ -20,13 +21,15 @@ public class Weapon extends Observable {
     public int attackSpeed;
 
     public void save() {
-        try {
-            PreparedStatement saveStatement = prepareStatement(SAVE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement saveStatement = connection.prepareStatement(SAVE);
             saveStatement.setString(1, name);
             saveStatement.setInt(2, damage);
             saveStatement.setInt(3, attackSpeed);
 
             saveStatement.execute();
+            saveStatement.close();
+            connection.commit();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not save weapon " + name, e);

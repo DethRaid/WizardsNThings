@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
-import static model.DAOBase.prepareStatement;
+import static model.DAOBase.getDBConnection;
+
 
 /**
  * The player of a game
@@ -34,6 +36,8 @@ public class Player extends Observable implements ISaveable {
     public Weapon weapon;
     public Area currentArea;
     public Map<String, Ability> abilities;
+
+    public Player() {}
 
     public Player(String name){
         this.name = name;
@@ -75,20 +79,21 @@ public class Player extends Observable implements ISaveable {
     public void save() {
         // Check if the player exists. If so add a row, otherwise update a row
         boolean playerExists = false;
-        try {
-            PreparedStatement checkPlayerStatement = prepareStatement(CHECK_FOR_PLAYER);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement checkPlayerStatement = connection.prepareStatement(CHECK_FOR_PLAYER);
             ResultSet rs = checkPlayerStatement.executeQuery();
             playerExists = !rs.wasNull();
+
         } catch(SQLException e) {
             throw new RuntimeException("Could not check if player " + name + " exists", e);
         }
 
-        try {
+        try(Connection connection = getDBConnection()) {
             PreparedStatement savePlayerStatement;
             if(playerExists) {
-                savePlayerStatement = prepareStatement(SAVE_PLAYER);
+                savePlayerStatement = connection.prepareStatement(SAVE_PLAYER);
             } else {
-                savePlayerStatement = prepareStatement(CREATE_PLAYER);
+                savePlayerStatement = connection.prepareStatement(CREATE_PLAYER);
             }
 
             savePlayerStatement.setShort(1, defence);
@@ -100,6 +105,8 @@ public class Player extends Observable implements ISaveable {
             savePlayerStatement.setInt(7, currentArea.id);
             savePlayerStatement.setString(8, name);
             savePlayerStatement.execute();
+            connection.commit();
+
         } catch(SQLException e) {
             throw new RuntimeException("Could not save player " + name, e);
         }

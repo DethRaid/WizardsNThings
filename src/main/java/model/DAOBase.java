@@ -27,12 +27,9 @@ public abstract class DAOBase {
         }
     }
 
-    private static Connection getDBConnection() throws SQLException {
-        return DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
-    }
-
-    static PreparedStatement prepareStatement(String statement) throws SQLException {
-        Connection connection = getDBConnection();
-        return connection.prepareStatement(statement);
+    public static Connection getDBConnection() throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_CONNECTION, DB_USER, DB_PASSWORD);
+        connection.setAutoCommit(true);
+        return connection;
     }
 }

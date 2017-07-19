@@ -213,10 +213,10 @@ public class GameView {
      * Selects enemy for player to attack
      */
     public void selectPlayerTarget(){
-        Map<Integer, String> enemies = controller.getAllEnemies();
+        Map<Integer, Enemy> enemies = controller.getAllEnemies();
         ActionListBox list = new ActionListBox();
         enemies.forEach((id, enemy) -> {
-            list.addItem(enemy + " " + id, new Runnable() {
+            list.addItem(enemy.name + " " + id, new Runnable() {
                 @Override
                 public void run() {
                     controller.Attack(id);

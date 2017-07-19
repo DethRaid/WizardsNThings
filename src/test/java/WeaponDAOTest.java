@@ -14,13 +14,13 @@ public class WeaponDAOTest {
     @Before
     public void setup() {
         weaponDAO = new WeaponDAO();
-        WeaponDAO.createTable();
+        weaponDAO.createTable();
     }
 
     @Test
     public void saveWeaponTest() {
         Weapon weapon = new Weapon();
-        weapon.name = "Sword of slaying";
+        weapon.name = "Sword of Slaying";
         weapon.id = 0;
         weapon.attackSpeed = 3;
         weapon.damage = 4;
