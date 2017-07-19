@@ -17,6 +17,7 @@ import java.util.Map;
 public class AreaDAO extends DAOBase {
     private static final String GET_AREA_BY_ID = "SELECT * FROM area WHERE area.id = ?;";
     private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_id, count FROM area_enemies WHERE area_enemies.area_id = ?;";
+    private static final String GET_NUMBER_CLEARED_ROOMS = "SELECT COUNT(area_id) as num FROM cleared_areas WHERE cleared_area.player_id = ?;";
 
     private static final String CREATE_AREA_TABLE =
             "CREATE TABLE area(" +
@@ -55,8 +56,18 @@ public class AreaDAO extends DAOBase {
             PreparedStatement createAreaEnemiesTable = connection.prepareStatement(CREATE_AREA_ENEMIES_TABLE);
             createAreaEnemiesTable.execute();
             connection.commit();
+
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the area enemies table", e);
+        }
+
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createClearedAreasTable = connection.prepareStatement(CREATE_CLEARED_AREAS_TABLE);
+            createClearedAreasTable.execute();
+            connection.commit();
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not create the cleared area enemies table", e);
         }
     }
 
@@ -83,6 +94,22 @@ public class AreaDAO extends DAOBase {
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not retrieve area with id " + areaId, e);
+        }
+    }
+
+    public int getNumClearedAreas(Player player) {
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement statement = connection.prepareStatement(GET_NUMBER_CLEARED_ROOMS);
+            statement.setString(1, player.name);
+            ResultSet rs = statement.executeQuery();
+
+            if(rs.next()) {
+                return rs.getInt("num");
+            }
+            throw new RuntimeException("Could not get number of cleared areas for player " + player.name);
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not get number of cleared rooms to player " + player.name, e);
         }
     }
 

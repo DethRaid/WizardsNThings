@@ -20,7 +20,7 @@ public class AbilityDAO extends DAOBase {
             ",name VARCHAR(128) NOT NULL" +
             ",damage INT NOT NULL" +
             ",num_targets INT NOT NULL" +
-            ",health_healed INT NOT NULL," +
+            ",health_healed INT NOT NULL" +
             ",description VARCHAR(512) NOT NULL" +
             ",level_available_to_player INT NOT NULL" +
             ");";
