@@ -34,4 +34,11 @@ public class Enemy extends Observable {
         setChanged();
         notifyObservers(this);
     }
+
+    @Override
+    public String toString() {
+        return "Enemy{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

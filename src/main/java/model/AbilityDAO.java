@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,17 +38,19 @@ public class AbilityDAO extends DAOBase {
     private static String GET_ABILITY_WITH_LEVEL = "SELECT * FROM ability WHERE ability.level_available_to_player = ?;";
 
     public static void createTables() {
-        try {
-            PreparedStatement createAbilitytableStatement = prepareStatement(CREATE_ABILITY_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createAbilitytableStatement = connection.prepareStatement(CREATE_ABILITY_TABLE);
             createAbilitytableStatement.execute();
+            connection.commit();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not create ability table", e);
         }
 
-        try {
-            PreparedStatement createPlayerAbilityTableStatement = prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createPlayerAbilityTableStatement = connection.prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
             createPlayerAbilityTableStatement.execute();
+            connection.commit();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not create player_ability table", e);
@@ -55,8 +58,8 @@ public class AbilityDAO extends DAOBase {
     }
 
     public Ability getAbility(int abilityId) {
-        try {
-            PreparedStatement getAbilityStatement = prepareStatement(GET_ABILITY);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getAbilityStatement = connection.prepareStatement(GET_ABILITY);
             getAbilityStatement.setInt(0, abilityId);
             ResultSet abilitySet = getAbilityStatement.executeQuery();
 
@@ -68,8 +71,8 @@ public class AbilityDAO extends DAOBase {
     }
 
     public Map<String, Ability> getAllAbilitiesForPlayer(Player player) {
-        try {
-            PreparedStatement getAbilitiesForPlayerStatement = prepareStatement(GET_ABILITIES_FOR_PLAYER);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getAbilitiesForPlayerStatement = connection.prepareStatement(GET_ABILITIES_FOR_PLAYER);
             getAbilitiesForPlayerStatement.setString(1, player.name);
             ResultSet abilitiesSet = getAbilitiesForPlayerStatement.executeQuery();
 
@@ -87,8 +90,8 @@ public class AbilityDAO extends DAOBase {
     }
 
     public List<Ability> getAbilitiesWithLevel(int level) {
-        try {
-            PreparedStatement getAbilitiesStatement = prepareStatement(GET_ABILITY_WITH_LEVEL);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getAbilitiesStatement = connection.prepareStatement(GET_ABILITY_WITH_LEVEL);
             ResultSet rs = getAbilitiesStatement.executeQuery();
 
             List<Ability> abilities = new ArrayList<>();

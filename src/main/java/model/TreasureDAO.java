@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,17 +23,18 @@ public class TreasureDAO extends DAOBase {
     private final WeaponDAO weaponDAO = new WeaponDAO();
 
     public static void createTable() {
-        try {
-            PreparedStatement createTableStatement = prepareStatement(CREATE_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createTableStatement = connection.prepareStatement(CREATE_TABLE);
             createTableStatement.execute();
+            connection.commit();
         } catch(SQLException e) {
             throw new RuntimeException("Could not create treasure table", e);
         }
     }
 
     public Treasure getTreasure(int treasureId) {
-        try {
-            PreparedStatement getTreasureStatement = prepareStatement(GET_TREASURE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getTreasureStatement = connection.prepareStatement(GET_TREASURE);
             ResultSet treasureSet = getTreasureStatement.executeQuery();
 
             Treasure treasure = new Treasure();

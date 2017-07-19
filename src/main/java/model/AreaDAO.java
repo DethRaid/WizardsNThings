@@ -2,6 +2,7 @@ package model;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,26 +42,28 @@ public class AreaDAO extends DAOBase {
     private final EnemyDAO enemyDAO = new EnemyDAO();
 
     public static void createTables() {
-        try {
-            PreparedStatement createAreaTableStatement = prepareStatement(CREATE_AREA_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createAreaTableStatement = connection.prepareStatement(CREATE_AREA_TABLE);
             createAreaTableStatement.execute();
+            connection.commit();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not create area_enemies table", e);
         }
 
-        try {
-            PreparedStatement createAreaEnemiesTable = prepareStatement(CREATE_AREA_ENEMIES_TABLE);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement createAreaEnemiesTable = connection.prepareStatement(CREATE_AREA_ENEMIES_TABLE);
             createAreaEnemiesTable.execute();
+            connection.commit();
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the area enemies table", e);
         }
     }
 
     public Area getArea(final int areaId) {
-        try {
-            PreparedStatement getAreaStatement = prepareStatement(GET_AREA_BY_ID);
-            PreparedStatement getEnemiesInAreaStatement = prepareStatement(GET_ENEMIES_IN_AREA);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getAreaStatement = connection.prepareStatement(GET_AREA_BY_ID);
+            PreparedStatement getEnemiesInAreaStatement = connection.prepareStatement(GET_ENEMIES_IN_AREA);
 
             ResultSet areaResult = getAreaStatement.executeQuery();
             if(!areaResult.next()) {
@@ -89,8 +92,8 @@ public class AreaDAO extends DAOBase {
     }
 
     public Map<Enemy, Integer> getEnemiesInArea(int areaId) {
-        try {
-            PreparedStatement getEnemiesInAreaStatement = prepareStatement(GET_ENEMIES_IN_AREA);
+        try(Connection connection = getDBConnection()) {
+            PreparedStatement getEnemiesInAreaStatement = connection.prepareStatement(GET_ENEMIES_IN_AREA);
             getEnemiesInAreaStatement.setInt(1, areaId);
             ResultSet rs = getEnemiesInAreaStatement.executeQuery();
 

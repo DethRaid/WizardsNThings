@@ -14,7 +14,7 @@ public class WeaponDAOTest {
     @Before
     public void setup() {
         weaponDAO = new WeaponDAO();
-        WeaponDAO.createTable();
+        weaponDAO.createTable();
     }
 
     @Test
@@ -30,7 +30,7 @@ public class WeaponDAOTest {
 
     @Test
     public void getWeaponTest() {
-        Weapon weapon = weaponDAO.getWeapon(1);
+        Weapon weapon = weaponDAO.getWeapon(0);
         Assert.assertEquals(weapon.name, "Sword of Slaying");
         System.out.println(weapon.name);
     }
