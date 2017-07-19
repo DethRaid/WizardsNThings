@@ -51,7 +51,10 @@ public class WeaponDAO extends DAOBase {
             statement.setInt(1, id);
             ResultSet weaponSet = statement.executeQuery();
 
-            return makeWeapon(weaponSet);
+            if(weaponSet.next()) {
+                return makeWeapon(weaponSet);
+            }
+            throw new RuntimeException("Could not get weapon with ID " + id + ": ResultSet#next returned false");
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not get weapon with ID " + id, e);
