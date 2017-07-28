@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
@@ -21,7 +20,7 @@ import static model.DAOBase.getDBConnection;
 public class Player extends Observable implements ISaveable {
     private static final String CHECK_FOR_PLAYER = "SELECT * FROM player WHERE player.name = ?;";
     private static final String SAVE_PLAYER = "UPDATE player " +
-            "SET strength = ?, defence = ?, experience = ?, currentHealth = ?, maxHealth = ?, weapon_id = ?, currentArea_id = ?)" +
+            "SET strength = ?, defence = ?, experience = ?, currentHealth = ?, maxHealth = ?, weapon_id = ?, currentArea_id = ? " +
             "WHERE name = ?;";
 
     private static final String CREATE_PLAYER = "INSERT INTO player(strength, defence, experience, currentHealth, maxHealth, weapon_id, currentArea_id, name) " +
@@ -78,11 +77,12 @@ public class Player extends Observable implements ISaveable {
     @Override
     public void save() {
         // Check if the player exists. If so add a row, otherwise update a row
-        boolean playerExists = false;
-        try(Connection connection = getDBConnection()) {
-            PreparedStatement checkPlayerStatement = connection.prepareStatement(CHECK_FOR_PLAYER);
+        boolean playerExists;
+        try(Connection connection = getDBConnection();
+            PreparedStatement checkPlayerStatement = connection.prepareStatement(CHECK_FOR_PLAYER)) {
+            checkPlayerStatement.setString(1, name);
             ResultSet rs = checkPlayerStatement.executeQuery();
-            playerExists = !rs.wasNull();
+            playerExists = rs.next();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not check if player " + name + " exists", e);
@@ -101,8 +101,8 @@ public class Player extends Observable implements ISaveable {
             savePlayerStatement.setInt(3, experience);
             savePlayerStatement.setInt(4, currentHealth);
             savePlayerStatement.setInt(5, maxHealth);
-            savePlayerStatement.setInt(6, weapon.id);
-            savePlayerStatement.setInt(7, currentArea.id);
+            savePlayerStatement.setInt(6, weapon != null ? weapon.id : 0);
+            savePlayerStatement.setInt(7, currentArea != null ? currentArea.id : 0);
             savePlayerStatement.setString(8, name);
             savePlayerStatement.execute();
             connection.commit();
@@ -110,5 +110,37 @@ public class Player extends Observable implements ISaveable {
         } catch(SQLException e) {
             throw new RuntimeException("Could not save player " + name, e);
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+
+        final Player player = (Player) o;
+
+        if (strength != player.strength) return false;
+        if (defence != player.defence) return false;
+        if (experience != player.experience) return false;
+        if (currentHealth != player.currentHealth) return false;
+        if (maxHealth != player.maxHealth) return false;
+        if (!name.equals(player.name)) return false;
+        if (weapon != null ? !weapon.equals(player.weapon) : player.weapon != null) return false;
+        if (currentArea != null ? !currentArea.equals(player.currentArea) : player.currentArea != null) return false;
+        return abilities != null ? abilities.equals(player.abilities) : player.abilities == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (int) strength;
+        result = 31 * result + (int) defence;
+        result = 31 * result + experience;
+        result = 31 * result + currentHealth;
+        result = 31 * result + maxHealth;
+        result = 31 * result + (weapon != null ? weapon.hashCode() : 0);
+        result = 31 * result + (currentArea != null ? currentArea.hashCode() : 0);
+        result = 31 * result + (abilities != null ? abilities.hashCode() : 0);
+        return result;
     }
 }

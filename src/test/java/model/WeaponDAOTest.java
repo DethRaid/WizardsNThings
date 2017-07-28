@@ -1,5 +1,5 @@
-import model.Weapon;
-import model.WeaponDAO;
+package model;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,5 +33,13 @@ public class WeaponDAOTest {
         Weapon weapon = weaponDAO.getWeapon(1);
         Assert.assertEquals(weapon.name, "Sword of Slaying");
         System.out.println(weapon.name);
+    }
+
+    @Test
+    public void testGetStartingWeapon() {
+        Weapon weapon = weaponDAO.getStartingWeapon();
+        Assert.assertEquals(weapon.name, "Sword of Slaying");
+        Assert.assertEquals(weapon.attackSpeed, 3);
+        Assert.assertEquals(weapon.damage, 4);
     }
 }

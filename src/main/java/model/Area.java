@@ -41,4 +41,28 @@ public class Area extends Observable {
     public void setAreaAsCleared(String playerName) {
 
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Area)) return false;
+
+        final Area area = (Area) o;
+
+        if (id != area.id) return false;
+        if (!name.equals(area.name)) return false;
+        if (!description.equals(area.description)) return false;
+        if (!treasure.equals(area.treasure)) return false;
+        return enemies.equals(area.enemies);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + treasure.hashCode();
+        result = 31 * result + enemies.hashCode();
+        return result;
+    }
 }
