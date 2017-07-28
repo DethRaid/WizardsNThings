@@ -1,6 +1,7 @@
 package model;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -14,6 +15,14 @@ import static org.junit.Assert.*;
  */
 public class PlayerDAOTest extends DaoTestBase {
     PlayerDAO playerDAO = new PlayerDAO();
+
+    @Before
+    public void setUp() {
+        PlayerDAO.createTable();
+        WeaponDAO.createTable();
+        AbilityDAO.createTables();
+        AreaDAO.createTables();
+    }
 
     @Test
     public void createTable() throws Exception {

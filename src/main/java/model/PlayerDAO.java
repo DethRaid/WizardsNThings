@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class PlayerDAO extends DAOBase {
     private static final String GET_ALL_PLAYERS     = "SELECT name FROM player;";
-    private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM players WHERE player.name = ?;";
+    private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM player WHERE player.name = ?;";
     private static final String CREATE_PLAYER_TABLE =
-            "CREATE TABLE IF NOT EXISTS players(" +
+            "CREATE TABLE IF NOT EXISTS player(" +
              "name              varchar(255)    not null    primary key" +
             ",strength          smallint        not null" +
             ",defence           smallint        not null" +
@@ -29,7 +29,7 @@ public class PlayerDAO extends DAOBase {
             ");";
 
     private static String CREATE_PLAYER_ABILITY_TABLE =
-            "CREATE TABLE player_abilities(" +
+            "CREATE TABLE IF NOT EXISTS player_abilities(" +
              "player_id INT NOT NULL" +
             ",ability_id INT NOT NULL" +
             ");";

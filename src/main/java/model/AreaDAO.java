@@ -28,13 +28,13 @@ public class AreaDAO extends DAOBase {
                 ");";
 
     private static final String CREATE_AREA_ENEMIES_TABLE =
-            "CREATE TABLE area_enemies(" +
+            "CREATE TABLE IF NOT EXISTS area_enemies(" +
              "enemy_name    VARCHAR(128)    NOT NULL" +
             ",area_id       INT             NOT NULL" +
             ");";
 
     private static final String CREATE_CLEARED_AREAS_TABLE =
-            "CREATE TABLE cleared_areas(" +
+            "CREATE TABLE IF NOT EXISTS cleared_areas(" +
              "area_id   INT     NOT NULL" +
             ",player_id INT     NOT NULL" +
             ");";
@@ -72,9 +72,12 @@ public class AreaDAO extends DAOBase {
     }
 
     public Area getArea(final int areaId) {
-        try(Connection connection = getDBConnection()) {
-            PreparedStatement getAreaStatement = connection.prepareStatement(GET_AREA_BY_ID);
-            PreparedStatement getEnemiesInAreaStatement = connection.prepareStatement(GET_ENEMIES_IN_AREA);
+        if(areaId == 0) {
+            return null;
+        }
+
+        try(Connection connection = getDBConnection();
+            PreparedStatement getAreaStatement = connection.prepareStatement(GET_AREA_BY_ID)) {
 
             ResultSet areaResult = getAreaStatement.executeQuery();
             if(!areaResult.next()) {

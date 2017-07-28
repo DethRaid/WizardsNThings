@@ -31,7 +31,7 @@ public class WeaponDAO extends DAOBase {
      *
      * <p>If the weapon table exists, then this method does nothing</p>
      */
-    public void createTable() {
+    public static void createTable() {
         try(Connection connection = getDBConnection()) {
             PreparedStatement statement = connection.prepareStatement(CREATE_TABLE);
             statement.execute();
@@ -46,6 +46,9 @@ public class WeaponDAO extends DAOBase {
     }
 
     public Weapon getWeapon(int id) {
+        if(id == 0) {
+            return null;
+        }
         try(Connection connection = getDBConnection()) {
             PreparedStatement statement = connection.prepareStatement(GET_WEAPON_BY_ID);
             statement.setInt(1, id);

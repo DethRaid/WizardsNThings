@@ -20,7 +20,7 @@ import static model.DAOBase.getDBConnection;
 public class Player extends Observable implements ISaveable {
     private static final String CHECK_FOR_PLAYER = "SELECT * FROM player WHERE player.name = ?;";
     private static final String SAVE_PLAYER = "UPDATE player " +
-            "SET strength = ?, defence = ?, experience = ?, currentHealth = ?, maxHealth = ?, weapon_id = ?, currentArea_id = ?)" +
+            "SET strength = ?, defence = ?, experience = ?, currentHealth = ?, maxHealth = ?, weapon_id = ?, currentArea_id = ? " +
             "WHERE name = ?;";
 
     private static final String CREATE_PLAYER = "INSERT INTO player(strength, defence, experience, currentHealth, maxHealth, weapon_id, currentArea_id, name) " +
@@ -77,11 +77,12 @@ public class Player extends Observable implements ISaveable {
     @Override
     public void save() {
         // Check if the player exists. If so add a row, otherwise update a row
-        boolean playerExists = false;
-        try(Connection connection = getDBConnection()) {
-            PreparedStatement checkPlayerStatement = connection.prepareStatement(CHECK_FOR_PLAYER);
+        boolean playerExists;
+        try(Connection connection = getDBConnection();
+            PreparedStatement checkPlayerStatement = connection.prepareStatement(CHECK_FOR_PLAYER)) {
+            checkPlayerStatement.setString(1, name);
             ResultSet rs = checkPlayerStatement.executeQuery();
-            playerExists = !rs.wasNull();
+            playerExists = rs.next();
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not check if player " + name + " exists", e);
@@ -100,8 +101,8 @@ public class Player extends Observable implements ISaveable {
             savePlayerStatement.setInt(3, experience);
             savePlayerStatement.setInt(4, currentHealth);
             savePlayerStatement.setInt(5, maxHealth);
-            savePlayerStatement.setInt(6, weapon.id);
-            savePlayerStatement.setInt(7, currentArea.id);
+            savePlayerStatement.setInt(6, weapon != null ? weapon.id : 0);
+            savePlayerStatement.setInt(7, currentArea != null ? currentArea.id : 0);
             savePlayerStatement.setString(8, name);
             savePlayerStatement.execute();
             connection.commit();
