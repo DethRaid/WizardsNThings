@@ -21,6 +21,7 @@ public class TreasureDAOTest extends DaoTestBase {
     @Before
     public void setUp() throws Exception {
         treasureDAO = new TreasureDAO();
+        WeaponDAO.createTable();
     }
 
     @Test
