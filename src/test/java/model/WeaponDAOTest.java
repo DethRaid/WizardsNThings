@@ -38,8 +38,8 @@ public class WeaponDAOTest {
     @Test
     public void testGetStartingWeapon() {
         Weapon weapon = weaponDAO.getStartingWeapon();
-        Assert.assertEquals(weapon.name, "Sword of Slaying");
-        Assert.assertEquals(weapon.attackSpeed, 3);
-        Assert.assertEquals(weapon.damage, 4);
+        Assert.assertEquals(weapon.name, "Bonker");
+        Assert.assertEquals(weapon.attackSpeed, 1);
+        Assert.assertEquals(weapon.damage, 50);
     }
 }

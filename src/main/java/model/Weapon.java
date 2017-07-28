@@ -21,14 +21,13 @@ public class Weapon extends Observable {
     public int attackSpeed;
 
     public void save() {
-        try(Connection connection = getDBConnection()) {
-            PreparedStatement saveStatement = connection.prepareStatement(SAVE);
+        try(Connection connection = getDBConnection();
+                PreparedStatement saveStatement = connection.prepareStatement(SAVE)) {
             saveStatement.setString(1, name);
             saveStatement.setInt(2, damage);
             saveStatement.setInt(3, attackSpeed);
 
             saveStatement.execute();
-            saveStatement.close();
             connection.commit();
 
         } catch(SQLException e) {

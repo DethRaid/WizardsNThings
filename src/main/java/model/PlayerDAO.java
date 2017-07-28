@@ -21,7 +21,7 @@ public class PlayerDAO extends DAOBase {
              "name              varchar(255)    not null    primary key" +
             ",strength          smallint        not null" +
             ",defence           smallint        not null" +
-            ",experience        int             nul null" +
+            ",experience        int             not null" +
             ",currentHealth     int             not null" +
             ",maxHealth         int             not null" +
             ",weapon_id         INT             NOT NULL" +

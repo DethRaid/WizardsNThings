@@ -32,8 +32,14 @@ public class TreasureDAOTest extends DaoTestBase {
     @Test
     public void saveTreasure() throws Exception {
         Treasure treasure = new Treasure();
-        Weapon weapon = new WeaponDAO().getWeapon(0);
-        treasure.id = 0;
+        Weapon weapon = new Weapon();
+        weapon.id = 100;
+        weapon.attackSpeed = 3;
+        weapon.damage = 4;
+        weapon.name = "Sword of Slaying";
+        weapon.save();
+        weapon = new WeaponDAO().getWeapon(1);
+        treasure.id = 1;
         treasure.name = "Treasure of St Aldrin";
         treasure.weapon = weapon;
 
@@ -41,7 +47,7 @@ public class TreasureDAOTest extends DaoTestBase {
 
         treasure.save();
 
-        Treasure treasure1 = treasureDAO.getTreasure(0);
+        Treasure treasure1 = treasureDAO.getTreasure(1);
         Assert.assertEquals(treasure, treasure1);
     }
 }

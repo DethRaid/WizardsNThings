@@ -13,18 +13,21 @@ import static model.DAOBase.getDBConnection;
  */
 public class Treasure extends Observable implements ISaveable {
     private static final String SAVE =
-            "INSERT INTO treasure(id, name, weapon) VALUES (?, ?, ?);";
+            "INSERT INTO treasure(id, name, weapon_id) VALUES (?, ?, ?);";
     public int id;
     public String name;
     public Weapon weapon;
 
     @Override
     public void save() {
-        try(Connection connection = getDBConnection()) {
-            PreparedStatement saveStatement = connection.prepareStatement(SAVE);
+        try(Connection connection = getDBConnection();
+            PreparedStatement saveStatement = connection.prepareStatement(SAVE)) {
             saveStatement.setInt(1, id);
             saveStatement.setString(2, name);
             saveStatement.setInt(3, weapon.id);
+
+            saveStatement.execute();
+            connection.commit();
 
         } catch (SQLException e) {
             throw new RuntimeException("Could not save treasure " + name, e);

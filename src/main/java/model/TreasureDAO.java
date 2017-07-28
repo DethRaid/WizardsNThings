@@ -37,14 +37,18 @@ public class TreasureDAO extends DAOBase {
     public Treasure getTreasure(int treasureId) {
         try(Connection connection = getDBConnection()) {
             PreparedStatement getTreasureStatement = connection.prepareStatement(GET_TREASURE);
+            getTreasureStatement.setInt(1, treasureId);
             ResultSet treasureSet = getTreasureStatement.executeQuery();
 
-            Treasure treasure = new Treasure();
-            treasure.id = treasureSet.getInt("id");
-            treasure.name = treasureSet.getString("name");
-            treasure.weapon = weaponDAO.getWeapon(treasureSet.getInt("weapon_id"));
+            if(treasureSet.next()) {
+                Treasure treasure = new Treasure();
+                treasure.id = treasureSet.getInt("id");
+                treasure.name = treasureSet.getString("name");
+                treasure.weapon = weaponDAO.getWeapon(treasureSet.getInt("weapon_id"));
 
-            return treasure;
+                return treasure;
+            }
+            throw new RuntimeException("Could not get treasure with ID " + treasureId);
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not get treasure with id " + treasureId, e);
