@@ -110,4 +110,36 @@ public class Player extends Observable implements ISaveable {
             throw new RuntimeException("Could not save player " + name, e);
         }
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+
+        final Player player = (Player) o;
+
+        if (strength != player.strength) return false;
+        if (defence != player.defence) return false;
+        if (experience != player.experience) return false;
+        if (currentHealth != player.currentHealth) return false;
+        if (maxHealth != player.maxHealth) return false;
+        if (!name.equals(player.name)) return false;
+        if (weapon != null ? !weapon.equals(player.weapon) : player.weapon != null) return false;
+        if (currentArea != null ? !currentArea.equals(player.currentArea) : player.currentArea != null) return false;
+        return abilities != null ? abilities.equals(player.abilities) : player.abilities == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (int) strength;
+        result = 31 * result + (int) defence;
+        result = 31 * result + experience;
+        result = 31 * result + currentHealth;
+        result = 31 * result + maxHealth;
+        result = 31 * result + (weapon != null ? weapon.hashCode() : 0);
+        result = 31 * result + (currentArea != null ? currentArea.hashCode() : 0);
+        result = 31 * result + (abilities != null ? abilities.hashCode() : 0);
+        return result;
+    }
 }

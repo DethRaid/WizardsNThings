@@ -20,7 +20,7 @@ public class AreaDAO extends DAOBase {
     private static final String GET_NUMBER_CLEARED_ROOMS = "SELECT COUNT(area_id) as num FROM cleared_areas WHERE cleared_area.player_id = ?;";
 
     private static final String CREATE_AREA_TABLE =
-            "CREATE TABLE area(" +
+            "CREATE TABLE IF NOT EXISTS area(" +
                 "id             INT             NOT NULL    PRIMARY KEY" +
                ",name           VARCHAR(255)    NOT NULL" +
                ",description    VARCHAR(512)    NOT NULL" +

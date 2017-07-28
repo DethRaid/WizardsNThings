@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class WeaponDAO extends DAOBase {
     private static String GET_WEAPON_BY_ID  = "SELECT * FROM weapon WHERE weapon.id = ?;";
     private static String CREATE_TABLE  =
-            "CREATE TABLE weapon(" +
+            "CREATE TABLE IF NOT EXISTS weapon(" +
              "id            IDENTITY" +
             ",name          VARCHAR(255)    NOT NULL" +
             ",damage        INT             NOT NULL" +

@@ -17,7 +17,7 @@ public class PlayerDAO extends DAOBase {
     private static final String GET_ALL_PLAYERS     = "SELECT name FROM player;";
     private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM players WHERE player.name = ?;";
     private static final String CREATE_PLAYER_TABLE =
-            "CREATE TABLE players(" +
+            "CREATE TABLE IF NOT EXISTS players(" +
              "name              varchar(255)    not null    primary key" +
             ",strength          smallint        not null" +
             ",defence           smallint        not null" +

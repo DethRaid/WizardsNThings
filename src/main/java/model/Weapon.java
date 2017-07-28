@@ -35,4 +35,26 @@ public class Weapon extends Observable {
             throw new RuntimeException("Could not save weapon " + name, e);
         }
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Weapon)) return false;
+
+        final Weapon weapon = (Weapon) o;
+
+        if (id != weapon.id) return false;
+        if (damage != weapon.damage) return false;
+        if (attackSpeed != weapon.attackSpeed) return false;
+        return name.equals(weapon.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + damage;
+        result = 31 * result + attackSpeed;
+        return result;
+    }
 }

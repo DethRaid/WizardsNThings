@@ -14,13 +14,13 @@ import java.sql.SQLException;
 public class TreasureDAO extends DAOBase {
     private static final String GET_TREASURE = "SELECT * FROM treasure WHERE treasure.id = ?;";
     private static final String CREATE_TABLE =
-            "CREATE TABLE treasure(" +
+            "CREATE TABLE IF NOT EXISTS treasure(" +
              "id     INT     NOT NULL    PRIMARY KEY" +
             ",name  VARCHAR(255)    NOT NULL" +
             ",weapon_id INT NOT NULL" +
             ");";
     public static final String DELETE_TREASURE =
-            "DELETE * FROM treasure WHERE treasure.id = ?;";
+            "DELETE FROM treasure WHERE treasure.id = ?;";
 
     private final WeaponDAO weaponDAO = new WeaponDAO();
 

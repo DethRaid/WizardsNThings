@@ -11,7 +11,7 @@ import java.sql.SQLException;
  */
 public class EnemyDAO extends DAOBase {
     private static String CREATE_ENEMY_TABLE =
-            "CREATE TABLE enemy(" +
+            "CREATE TABLE IF NOT EXISTS enemy(" +
                     "name VARCHAR(128)  NOT NULL PRIMARY KEY" +
                     ",level INT NOT NULL" +
                     ");";
