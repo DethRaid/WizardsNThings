@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public abstract class DAOBase {
     private static final String DB_DRIVER       = "org.h2.Driver";
-    private static final String DB_CONNECTION   = "jdbc:h2:~/wizards_n_things;" +
+    private static final String DB_CONNECTION   = "jdbc:h2:~/wizards_n_things.trace.db;" +
             "INIT=CREATE SCHEMA IF NOT EXISTS wizards_n_things\\;" +
             "SET SCHEMA wizards_n_things;";
     private static final String DB_USER         = "";
@@ -22,7 +22,7 @@ public abstract class DAOBase {
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e);
         }
     }
 

@@ -28,11 +28,104 @@ public class Controller {
      */
     public Controller(){
         playerDAO = new PlayerDAO();
+        playerDAO.createTable();
         areaDAO = new AreaDAO();
+        areaDAO.createTables();
         enemyDAO = new EnemyDAO();
+        enemyDAO.createTable();
+        createEnemies();
         weaponDAO = new WeaponDAO();
+        weaponDAO.createTable();
         treasureDAO = new TreasureDAO();
+        treasureDAO.createTable();
+        createWeapons();
     }
+
+    public void createEnemies(){
+        Enemy enemy = new Enemy();
+        enemy.name = "goblin";
+        enemy.level = 1;
+        enemy.currentHealth = 20;
+        enemy.isDead = false;
+
+        enemy.save();
+
+        enemy = new Enemy();
+        enemy.name = "spider";
+        enemy.level = 1;
+        enemy.currentHealth = 20;
+        enemy.isDead = false;
+
+        enemy.save();
+
+        enemy = new Enemy();
+        enemy.name = "orc";
+        enemy.level = 1;
+        enemy.currentHealth = 20;
+        enemy.isDead = false;
+        enemy.save();
+    }
+
+    public void createAreas(){
+
+    }
+
+    public void createWeapons(){
+        Weapon weapon = new Weapon();
+        weapon.name = "Sword of Slaying";
+        weapon.id = 0;
+        weapon.attackSpeed = 3;
+        weapon.damage = 4;
+
+        weapon.save();
+
+        Treasure treasure = new Treasure();
+        treasure.id = 1;
+        treasure.name = "Treasure of St Aldrin";
+        treasure.weapon = weapon;
+
+        treasureDAO.deleteTreasure(treasure);
+
+        treasure.save();
+
+        Area area = new Area();
+        area.id = 0;
+        area.name = "Swamp";
+        area.description = "Muggy and hot, with the smell of decay and slow moving things.";
+        area.treasure = treasure;
+        area.enemyName = "spider";
+        area.enemyNumber = 1;
+        area.save();
+
+        area = new Area();
+        area.id = 1;
+        area.name = "Wasteland";
+        area.description = "Sand stretches before you, it is hot and oppressive";
+        area.treasure = treasure;
+        area.enemyName = "goblin";
+        area.enemyNumber = 1;
+        area.save();
+
+        area = new Area();
+        area.id = 2;
+        area.name = "Frozen Tundra";
+        area.description = "Icicles form on your hair and you feel a bone chilling cold. Snow dots the landscape";
+        area.treasure = treasure;
+        area.enemyName = "orc";
+        area.enemyNumber = 1;
+        area.save();
+
+        area = new Area();
+        area.id = 3;
+        area.name = "Volcano";
+        area.description = "Fire and magma explodes around you. The acrid smell of sulfer assaults your senses.";
+        area.treasure = treasure;
+        enemies = new HashMap<>();
+        area.enemyName = "orc";
+        area.enemyNumber = 1;
+        area.save();
+    }
+
 
     /**
      * Set the current player to the player with the given name
@@ -79,6 +172,10 @@ public class Controller {
      */
     public List<String> getAllPlayers(){
         return playerDAO.getNamesOfAllPlayers();
+    }
+
+    public Area getCurrentArea(){
+        return currentPlayer.currentArea;
     }
 
     /**

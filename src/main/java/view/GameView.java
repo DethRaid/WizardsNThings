@@ -14,7 +14,9 @@ import com.googlecode.lanterna.terminal.swing.SwingTerminal;
 import model.*;
 import controller.Controller;
 
+import javax.xml.soap.Text;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Arrays;
@@ -25,7 +27,7 @@ import java.util.Map;
  * @author Susan Lunn
  */
 public class GameView {
-    public static Controller controller;
+    public static Controller controller = new Controller();
 
 
     /*
@@ -134,8 +136,8 @@ public class GameView {
                 .build()
                 .showDialog(gui);
         screen.clear();
-        // set current area -> call to controller ( pick first area in list of areas)
-        // go create a player in controller and have them send it back
+        controller.createNewPlayer(player);
+        renderArea();
     }
 
     private void listPreviousSaves(){
@@ -147,14 +149,25 @@ public class GameView {
      * Renders the entire area, including description and player actions
      */
     private void renderArea(){
-
+        renderAreaDescription();
     }
 
     /**
      * Renders an area's enemies and description
      */
     private void renderAreaDescription(){
+        TextBox title = new TextBox(controller.getCurrentArea().name);
+        TextBox description = new TextBox(controller.getCurrentArea().description);
+        long alive = controller.getAllEnemies().values().stream().filter(d -> d.isDead == false).count();
+        TextBox enemies =  new TextBox("Before you stands " + alive + " enemies!");
 
+        Panel panel = Panels.horizontal(title, description, enemies, new Separator(Direction.HORIZONTAL));
+        controller.getAllEnemies().forEach((id, enemy) -> {
+            panel.addComponent(new TextBox(enemy.name + " - " + enemy.currentHealth + "current HP"));
+        });
+        BasicWindow areaWindow = new BasicWindow("WizardsNThings");
+        areaWindow.setHints(Arrays.asList(Window.Hint.FULL_SCREEN));
+        areaWindow.setComponent(panel);
     }
 
     /**
@@ -220,7 +233,7 @@ public class GameView {
                 @Override
                 public void run() {
                     controller.Attack(id);
-                    // renderArea();
+                    renderArea();
                 }
             });
         });
@@ -238,7 +251,7 @@ public class GameView {
                 @Override
                 public void run() {
                    controller.castAbility(name);
-                    // renderArea()
+                    renderArea();
                 }
             });
         });
