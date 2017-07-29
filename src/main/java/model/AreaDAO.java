@@ -6,15 +6,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author ddubois
  * @since 7/11/17.
  */
 public class AreaDAO extends DAOBase {
+    private static final String GET_ALL_AREAS   = "SELECT * FROM area;";
     private static final String GET_AREA_BY_ID = "SELECT * FROM area WHERE area.id = ?;";
     private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_id, count FROM area_enemies WHERE area_enemies.area_id = ?;";
     private static final String GET_NUMBER_CLEARED_ROOMS = "SELECT COUNT(area_id) as num FROM cleared_areas WHERE cleared_area.player_id = ?;";
@@ -84,16 +87,7 @@ public class AreaDAO extends DAOBase {
                 throw new RuntimeException("Could not get area with ID " + areaId);
             }
 
-            Area area = new Area();
-            area.id = areaResult.getInt("id");
-            area.name = areaResult.getString("name");
-            area.description = areaResult.getString("description");
-
-            area.treasure = treasureDAO.getTreasure(areaResult.getInt("treasure_id"));
-
-            area.enemies = getEnemiesInArea(areaId);
-
-            return area;
+            return makeArea(areaResult);
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not retrieve area with id " + areaId, e);
@@ -117,8 +111,23 @@ public class AreaDAO extends DAOBase {
     }
 
     public List<Area> getAreasInLevelRange(int maxLevel, int numAreas) {
-        // TODO
-        throw new NotImplementedException();
+        try(Connection connection = getDBConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_AREAS)) {
+
+            ResultSet rs = statement.executeQuery();
+            List<Area> areas = new ArrayList<>();
+            while(rs.next()) {
+                areas.add(makeArea(rs));
+            }
+
+            return areas.stream()
+                    .filter(area -> area.getLevel() <= maxLevel)
+                    .limit(numAreas)
+                    .collect(Collectors.toList());
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not get areas with level " + maxLevel, e);
+        }
     }
 
     public Map<Enemy, Integer> getEnemiesInArea(int areaId) {
@@ -139,5 +148,17 @@ public class AreaDAO extends DAOBase {
         } catch(SQLException e) {
             throw new RuntimeException("Could not get the enemies in area " + areaId, e);
         }
+    }
+
+    private Area makeArea(ResultSet areaResult) throws SQLException {
+        Area area = new Area();
+        area.id = areaResult.getInt("id");
+        area.name = areaResult.getString("name");
+        area.description = areaResult.getString("description");
+
+        area.treasure = treasureDAO.getTreasure(areaResult.getInt("treasure_id"));
+
+        area.enemies = getEnemiesInArea(area.id);
+        return area;
     }
 }

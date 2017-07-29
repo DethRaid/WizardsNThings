@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.ResultSet;
 import java.util.Map;
 import java.util.Observable;
 
