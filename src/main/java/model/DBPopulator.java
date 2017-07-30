@@ -111,7 +111,7 @@ public class DBPopulator {
             ability.name = abilityName;
             ability.damage = rand.nextInt(150);
             ability.numTargets = rand.nextInt(5);
-            ability.healthHealed = rand.nextInt() % 2 == 0 ? 0 : rand.nextInt(50);
+            ability.healthHealed = rand.nextBoolean() ? 0 : rand.nextInt(50);
             ability.description = "Super powerful";
             ability.levelAvailableToPlayer = (ability.damage + ability.healthHealed) * ability.numTargets / 100;
             ability.save();
@@ -120,7 +120,22 @@ public class DBPopulator {
             id++;
         }
 
+        for(String heroName : heroNames) {
+            Player player = new Player();
+            player.name = heroName;
+            player.experience = rand.nextInt(50) * 1000;
+            player.strength = (short) rand.nextInt(100);
+            player.defence = (short) rand.nextInt(100);
+            player.maxHealth = rand.nextInt(5000);
+            player.experience = Math.max(player.strength, player.defence) / 2;
+            player.currentHealth = rand.nextInt(player.maxHealth);
 
+            int areaIndex = rand.nextInt(areas.size());
+            player.currentArea = areas.get(areaIndex);
+
+            int weaponIndex = rand.nextInt(weapons.size());
+            player.weapon = weapons.get(weaponIndex);
+        }
     }
 
     private static void initAbilityNames() {
