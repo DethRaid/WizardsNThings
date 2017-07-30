@@ -17,7 +17,11 @@ public class WeaponDAO extends DAOBase {
             ",name          VARCHAR(255)    NOT NULL" +
             ",damage        INT             NOT NULL" +
             ",attack_speed  INT             NOT NULL" +
-            ");";
+            ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_WEAPON_ID ON weapon(id);" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_WEAPON_ATTACK_SPEED ON weapon(attack_speed);" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_WEAPON_DAMAGE ON weapon(damage);";
+
     private static String GET_RANDOM_BAD_WEAPON =
             "SELECT * FROM weapon WHERE weapon.id IN (" +
                     "SELECT id FROM weapon " +

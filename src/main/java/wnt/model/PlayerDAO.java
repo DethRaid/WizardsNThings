@@ -28,7 +28,8 @@ public class PlayerDAO extends DAOBase {
             ",currentArea_id    INT             NOT NULL" +
             ",FOREIGN KEY (weapon_id) REFERENCES weapon(id)" +
             ",FOREIGN KEY (currentArea_id) REFERENCES area(id)" +
-            ");";
+            ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_PLAYER_NAME ON player(name);";
 
     private WeaponDAO weaponDAO = new WeaponDAO();
     private AreaDAO areaDAO = new AreaDAO();
