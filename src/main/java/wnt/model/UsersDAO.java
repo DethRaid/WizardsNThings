@@ -71,7 +71,10 @@ public class UsersDAO extends DAOBase {
         }
 
         try(Connection connection = getDBConnection()) {
-            //con
+            connection.prepareStatement("GRANT SELECT ON * TO WNT_ADMIN;").execute();
+            connection.prepareStatement("GRANT INSERT ON * TO WNT_ADMIN;").execute();
+            connection.prepareStatement("REVOKE INSERT ON player FROM WNT_ADMIN;").execute();
+            connection.prepareStatement("REVOKE INSERT ON player_ability FROM WNT_ADMIN;").execute();
 
         } catch (SQLException e) {
             throw new RuntimeException("Could not grant permissions", e);
