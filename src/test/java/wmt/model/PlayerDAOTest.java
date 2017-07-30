@@ -1,13 +1,11 @@
-package model;
+package wmt.model;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import wnt.model.*;
 
-import java.util.HashMap;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author ddubois

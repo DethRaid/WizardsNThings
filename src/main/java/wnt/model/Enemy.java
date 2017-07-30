@@ -1,11 +1,11 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Observable;
 
-import static model.DAOBase.getDBConnection;
+import static wnt.model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois
@@ -19,6 +19,14 @@ public class Enemy extends Observable implements ISaveable {
     public int level;
     public transient int currentHealth;
     public transient boolean isDead;
+
+    public Enemy(String name, int level) {
+        this.name = name;
+        this.level = level;
+
+        currentHealth = getMaxHealth();
+        isDead = false;
+    }
 
     public int getStrength() {
         return level * 2;

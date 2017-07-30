@@ -4,4 +4,4 @@
  * @author ddubois
  * @since 7/11/17.
  */
-package model;
+package wnt.model;

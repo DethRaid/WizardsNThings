@@ -1,4 +1,4 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,8 +14,6 @@ import java.util.List;
  * @since 7/11/17.
  */
 public class PlayerDAO extends DAOBase {
-    private static final String GET_ALL_PLAYERS     = "SELECT name FROM player;";
-    private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM player WHERE player.name = ?;";
     private static final String CREATE_PLAYER_TABLE =
             "CREATE TABLE IF NOT EXISTS player(" +
              "name              varchar(255)    not null    primary key" +
@@ -26,13 +24,13 @@ public class PlayerDAO extends DAOBase {
             ",maxHealth         int             not null" +
             ",weapon_id         INT             NOT NULL" +
             ",currentArea_id    INT             NOT NULL" +
-            ");";
+            ",FOREIGN KEY (weapon_id) REFERENCES weapon(id)" +
+            ",FOREIGN KEY (currentArea_id) REFERENCES area(id)" +
+            ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_PLAYER_NAME ON player(name);";
 
-    private static String CREATE_PLAYER_ABILITY_TABLE =
-            "CREATE TABLE IF NOT EXISTS player_abilities(" +
-             "player_id INT NOT NULL" +
-            ",ability_id INT NOT NULL" +
-            ");";
+    private static final String GET_ALL_PLAYERS     = "SELECT name FROM player;";
+    private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM player WHERE player.name = ?;";
 
     private WeaponDAO weaponDAO = new WeaponDAO();
     private AreaDAO areaDAO = new AreaDAO();
@@ -46,14 +44,6 @@ public class PlayerDAO extends DAOBase {
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the players table", e);
-        }
-
-        try(Connection connection = getDBConnection()) {
-            PreparedStatement createAbilityTableStatement = connection.prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
-            createAbilityTableStatement.execute();
-            connection.commit();
-        } catch(SQLException e) {
-            throw new RuntimeException("Could not create the player ability table", e);
         }
     }
 

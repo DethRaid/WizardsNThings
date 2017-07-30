@@ -1,17 +1,13 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
-import static model.DAOBase.getDBConnection;
+import static wnt.model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois

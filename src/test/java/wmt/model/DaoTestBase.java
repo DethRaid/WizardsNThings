@@ -1,4 +1,4 @@
-package model;
+package wmt.model;
 
 import org.junit.Assert;
 
@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static model.DAOBase.getDBConnection;
+import static wnt.model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois

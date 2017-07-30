@@ -1,4 +1,4 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,7 +17,11 @@ public class WeaponDAO extends DAOBase {
             ",name          VARCHAR(255)    NOT NULL" +
             ",damage        INT             NOT NULL" +
             ",attack_speed  INT             NOT NULL" +
-            ");";
+            ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_WEAPON_ID ON weapon(id);" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_WEAPON_ATTACK_SPEED ON weapon(attack_speed);" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_WEAPON_DAMAGE ON weapon(damage);";
+
     private static String GET_RANDOM_BAD_WEAPON =
             "SELECT * FROM weapon WHERE weapon.id IN (" +
                     "SELECT id FROM weapon " +
@@ -38,9 +42,6 @@ public class WeaponDAO extends DAOBase {
             connection.commit();
 
         } catch(SQLException e) {
-            if(e.getMessage().contains("Table \"WEAPON\" already exists")) {
-                return;
-            }
             throw new RuntimeException("Could not create table weapon", e);
         }
     }

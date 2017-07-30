@@ -1,15 +1,12 @@
-package model;
+package wmt.model;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import static model.DAOBase.getDBConnection;
-import static org.junit.Assert.*;
+import wnt.model.Treasure;
+import wnt.model.TreasureDAO;
+import wnt.model.Weapon;
+import wnt.model.WeaponDAO;
 
 /**
  * @author ddubois

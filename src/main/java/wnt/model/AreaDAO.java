@@ -1,6 +1,4 @@
-package model;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,20 +26,27 @@ public class AreaDAO extends DAOBase {
                ",name           VARCHAR(255)    NOT NULL" +
                ",description    VARCHAR(512)    NOT NULL" +
                ",treasure_id    INT             NOT NULL" +
-                ");";
+               ",FOREIGN KEY (treasure_id) REFERENCES treasure(id)" +
+                ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_AREA_ID ON area(id DESC);";
 
     private static final String CREATE_AREA_ENEMIES_TABLE =
             "CREATE TABLE IF NOT EXISTS area_enemies(" +
              "enemy_name    VARCHAR(128)    NOT NULL" +
             ",area_id       INT             NOT NULL" +
             ",count         INT             NOT NULL" +
+            ",FOREIGN KEY (enemy_name) REFERENCES enemy(name)" +
+            ",FOREIGN KEY (area_id) REFERENCES area(id)" +
             ");";
 
     private static final String CREATE_CLEARED_AREAS_TABLE =
             "CREATE TABLE IF NOT EXISTS cleared_areas(" +
              "area_id   INT             NOT NULL" +
-            ",player_id VARCHAR(255)    NOT NULL" +
-            ");";
+            ",player_id VARCHAR(128)    NOT NULL" +
+            ",FOREIGN KEY (area_id) REFERENCES area(id)" +
+            ",FOREIGN KEY (player_id) REFERENCES player(name)" +
+            ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_CLEARED_AREAS_PLAYER_ID ON cleared_areas(player_id);";
 
     private final TreasureDAO treasureDAO = new TreasureDAO();
     private final EnemyDAO enemyDAO = new EnemyDAO();
@@ -64,7 +69,9 @@ public class AreaDAO extends DAOBase {
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the area enemies table", e);
         }
+    }
 
+    public static void createClearedAreasTable() {
         try(Connection connection = getDBConnection()) {
             PreparedStatement createClearedAreasTable = connection.prepareStatement(CREATE_CLEARED_AREAS_TABLE);
             createClearedAreasTable.execute();
