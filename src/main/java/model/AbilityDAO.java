@@ -1,5 +1,7 @@
 package model;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,6 +33,8 @@ public class AbilityDAO extends DAOBase {
             ",ability_id INT NOT NULL" +
             ");";
 
+    private static String GET_PLAYER_ABILITY_ROW =
+            "SELECT * FROM player_ability WHERE player_ability.player_name = ? AND player_ability.ability_id = ?;";
     private static String GET_ABILITIES_FOR_PLAYER = "SELECT * FROM ability WHERE ability.id IN (" +
             "SELECT ability_id FROM player_ability WHERE player_ability.player_name = ?" +
             ");";
@@ -67,6 +71,20 @@ public class AbilityDAO extends DAOBase {
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not get ability " + abilityId, e);
+        }
+    }
+
+    public boolean playerAbilityIsSaved(String playerName, int abilityId) {
+        try(Connection connection = getDBConnection();
+            PreparedStatement statement = connection.prepareStatement(GET_PLAYER_ABILITY_ROW)) {
+            statement.setString(1, playerName);
+            statement.setInt(2, abilityId);
+
+            ResultSet rs = statement.executeQuery();
+            return rs.next();
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not check if row exists", e);
         }
     }
 

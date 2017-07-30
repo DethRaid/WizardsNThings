@@ -18,6 +18,7 @@ public class DBPopulator {
     private static List<String> weaponNames = new ArrayList<>();
     private static List<String> heroNames = new ArrayList<>();
     private static List<String> areaNames = new ArrayList<>();
+    private static List<String> abilityNames = new ArrayList<>();
 
     public static void iReallyWantFreeFunctions() {
         initAdjectives();
@@ -25,6 +26,7 @@ public class DBPopulator {
         initWeaponNames();
         initHeroNames();
         initAreaNames();
+        initAbilityNames();
 
         Random rand = new Random();
 
@@ -100,6 +102,39 @@ public class DBPopulator {
                 areas.add(area);
             }
         }
+
+        List<Ability> abilities = new ArrayList<>();
+        id = 1;
+        for(String abilityName : abilityNames) {
+            Ability ability = new Ability();
+            ability.id = id;
+            ability.name = abilityName;
+            ability.damage = rand.nextInt(150);
+            ability.numTargets = rand.nextInt(5);
+            ability.healthHealed = rand.nextInt() % 2 == 0 ? 0 : rand.nextInt(50);
+            ability.description = "Super powerful";
+            ability.levelAvailableToPlayer = (ability.damage + ability.healthHealed) * ability.numTargets / 100;
+            ability.save();
+            abilities.add(ability);
+
+            id++;
+        }
+
+
+    }
+
+    private static void initAbilityNames() {
+        abilityNames.add("Fireball");
+        abilityNames.add("Lightning Bolt");
+        abilityNames.add("Heals");
+        abilityNames.add("Levitation");
+        abilityNames.add("Accio");
+        abilityNames.add("Balefire");
+        abilityNames.add("Knowledge");
+        abilityNames.add("Giving Birth");
+        abilityNames.add("Yelling");
+        abilityNames.add("Coding");
+        abilityNames.add("The Room");
     }
 
     private static void initAreaNames() {
