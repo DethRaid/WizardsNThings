@@ -1,16 +1,24 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Observable;
+
+import static model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois
  * @since 15-Jul-17
  */
-public class Enemy extends Observable {
+public class Enemy extends Observable implements ISaveable {
+    private static final String SAVE =
+            "INSERT INTO enemy(name, level) VALUES (?, ?);";
+
     public String name;
     public int level;
-    public int currentHealth;
-    public boolean isDead;
+    public transient int currentHealth;
+    public transient boolean isDead;
 
     public int getStrength() {
         return level * 2;
@@ -40,5 +48,38 @@ public class Enemy extends Observable {
         return "Enemy{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Enemy)) return false;
+
+        final Enemy enemy = (Enemy) o;
+
+        return level == enemy.level && name.equals(enemy.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + level;
+        result = 31 * result + currentHealth;
+        result = 31 * result + (isDead ? 1 : 0);
+        return result;
+    }
+
+    @Override
+    public void save() {
+        try(Connection connection = getDBConnection();
+             PreparedStatement saveStatement = connection.prepareStatement(SAVE)) {
+            saveStatement.setString(1, name);
+            saveStatement.setInt(2, level);
+            saveStatement.execute();
+            connection.commit();
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not save enemy " + name, e);
+        }
     }
 }
