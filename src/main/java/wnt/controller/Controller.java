@@ -272,11 +272,9 @@ public class Controller {
      * @return - the new enemy
      */
     private Enemy createNewEnemy(Enemy e){
-        Enemy newEnemy = new Enemy();
-        newEnemy.level = e.level;
+        Enemy newEnemy = new Enemy(e.name, e.level);
         newEnemy.currentHealth = e.currentHealth;
         newEnemy.isDead = e.isDead;
-        newEnemy.name = e.name;
         return newEnemy;
     }
 

@@ -42,9 +42,6 @@ public class WeaponDAO extends DAOBase {
             connection.commit();
 
         } catch(SQLException e) {
-            if(e.getMessage().contains("Table \"WEAPON\" already exists")) {
-                return;
-            }
             throw new RuntimeException("Could not create table weapon", e);
         }
     }

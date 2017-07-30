@@ -14,8 +14,6 @@ import java.util.List;
  * @since 7/11/17.
  */
 public class PlayerDAO extends DAOBase {
-    private static final String GET_ALL_PLAYERS     = "SELECT name FROM player;";
-    private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM player WHERE player.name = ?;";
     private static final String CREATE_PLAYER_TABLE =
             "CREATE TABLE IF NOT EXISTS player(" +
              "name              varchar(255)    not null    primary key" +
@@ -30,6 +28,9 @@ public class PlayerDAO extends DAOBase {
             ",FOREIGN KEY (currentArea_id) REFERENCES area(id)" +
             ");" +
                     "CREATE UNIQUE INDEX IF NOT EXISTS IDX_PLAYER_NAME ON player(name);";
+
+    private static final String GET_ALL_PLAYERS     = "SELECT name FROM player;";
+    private static final String GET_PLAYER_BY_NAME  = "SELECT * FROM player WHERE player.name = ?;";
 
     private WeaponDAO weaponDAO = new WeaponDAO();
     private AreaDAO areaDAO = new AreaDAO();

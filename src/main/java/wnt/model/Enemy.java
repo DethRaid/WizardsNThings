@@ -20,6 +20,14 @@ public class Enemy extends Observable implements ISaveable {
     public transient int currentHealth;
     public transient boolean isDead;
 
+    public Enemy(String name, int level) {
+        this.name = name;
+        this.level = level;
+
+        currentHealth = getMaxHealth();
+        isDead = false;
+    }
+
     public int getStrength() {
         return level * 2;
     }

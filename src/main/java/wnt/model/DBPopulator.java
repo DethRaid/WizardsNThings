@@ -33,9 +33,7 @@ public class DBPopulator {
         for(String enemyName : enemyNames) {
             for(String adjective : adjectives) {
                 String name = adjective + " " + enemyName;
-                Enemy enemy = new Enemy();
-                enemy.name = name;
-                enemy.level = rand.nextInt(50) + 1;
+                Enemy enemy = new Enemy(name, rand.nextInt(50) + 1);
 
                 enemy.save();
                 enemies.add(enemy);
