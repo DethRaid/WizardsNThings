@@ -11,118 +11,36 @@ import java.util.*;
 public class Controller {
 
     //DAO's
-    PlayerDAO playerDAO = new PlayerDAO();
-    AreaDAO areaDAO = new AreaDAO();
-    EnemyDAO enemyDAO = new EnemyDAO();
-    WeaponDAO weaponDAO = new WeaponDAO();
-    TreasureDAO treasureDAO = new TreasureDAO();
+    private PlayerDAO playerDAO = new PlayerDAO();
+    private AreaDAO areaDAO = new AreaDAO();
+    private EnemyDAO enemyDAO = new EnemyDAO();
+    private WeaponDAO weaponDAO = new WeaponDAO();
+    private TreasureDAO treasureDAO = new TreasureDAO();
 
 
     //Instances
-    Map<Integer, Enemy> enemies;
-    Area area;
-    Player currentPlayer;
+    private Map<Integer, Enemy> enemies;
+    private Area area;
+    private Player currentPlayer;
 
     /**
      * Constructor
      */
     public Controller(){
         playerDAO = new PlayerDAO();
-        playerDAO.createTable();
+        PlayerDAO.createTable();
         areaDAO = new AreaDAO();
-        areaDAO.createTables();
+        AreaDAO.createTables();
         enemyDAO = new EnemyDAO();
-        enemyDAO.createTable();
+        EnemyDAO.createTable();
         weaponDAO = new WeaponDAO();
-        weaponDAO.createTable();
+        WeaponDAO.createTable();
         treasureDAO = new TreasureDAO();
-        treasureDAO.createTable();
-        AbilityDAO abilityDAO = new AbilityDAO();
-        abilityDAO.createTables();
+        TreasureDAO.createTable();
+        AbilityDAO.createTables();
         if(!enemyDAO.hasExistingData()){
             DBPopulator.iReallyWantFreeFunctions();
         }
-    }
-
-    public void createEnemies(){
-        Enemy enemy = new Enemy();
-        enemy.name = "goblin";
-        enemy.level = 1;
-        enemy.currentHealth = 20;
-        enemy.isDead = false;
-
-        enemy.save();
-
-        enemy = new Enemy();
-        enemy.name = "spider";
-        enemy.level = 1;
-        enemy.currentHealth = 20;
-        enemy.isDead = false;
-
-        enemy.save();
-
-        enemy = new Enemy();
-        enemy.name = "orc";
-        enemy.level = 1;
-        enemy.currentHealth = 20;
-        enemy.isDead = false;
-        enemy.save();
-    }
-
-    public void createAreas(){
-
-    }
-
-    public void createWeapons(){
-        Weapon weapon = new Weapon();
-        weapon.name = "Sword of Slaying";
-        weapon.id = 0;
-        weapon.attackSpeed = 3;
-        weapon.damage = 4;
-
-        weapon.save();
-
-        Treasure treasure = new Treasure();
-        treasure.id = 1;
-        treasure.name = "Treasure of St Aldrin";
-        treasure.weapon = weapon;
-
-        treasureDAO.deleteTreasure(treasure);
-
-        treasure.save();
-
-        Area area = new Area();
-        area.id = 0;
-        area.name = "Swamp";
-        area.description = "Muggy and hot, with the smell of decay and slow moving things.";
-        area.treasure = treasure;
-        area.enemies.put(enemyDAO.getEnemy("spider"), 1);
-        area.save();
-
-        area = new Area();
-        area.id = 1;
-        area.name = "Wasteland";
-        area.description = "Sand stretches before you, it is hot and oppressive";
-        area.treasure = treasure;
-        area.enemies.put(enemyDAO.getEnemy("goblin"), 1);
-        area.save();
-
-        area = new Area();
-        area.id = 2;
-        area.name = "Frozen Tundra";
-        area.description = "Icicles form on your hair and you feel a bone chilling cold. Snow dots the landscape";
-        area.treasure = treasure;
-        area.enemies.put(enemyDAO.getEnemy("orc"), 1);
-        area.save();
-
-        area = new Area();
-        area.id = 3;
-        area.name = "Volcano";
-        area.description = "Fire and magma explodes around you. The acrid smell of sulfer assaults your senses.";
-        area.treasure = treasure;
-        enemies = new HashMap<>();
-        area.enemies.put(enemyDAO.getEnemy("orc"), 1);
-        area.save();
     }
 
 
@@ -195,7 +113,7 @@ public class Controller {
      * If the above calculation is less than 0, return 1
      * @return Player's level
      */
-    public int getLevel(){
+    private int getLevel(){
         int level = (currentPlayer.experience / 1000);
         return (level > 1) ? level : 1;
     }
@@ -238,10 +156,10 @@ public class Controller {
 
     /**
      * Get all the abilities of a player
-     * @return
+     * @return The names of all the abilities of the player
      */
-    public Set<String> getAbilities(){
-        return currentPlayer.abilities.keySet();
+    public List<Ability> getAbilities(){
+        return currentPlayer.abilities;
     }
 
     /**
@@ -299,10 +217,9 @@ public class Controller {
     /**
      * Cast a players ability
      *
-     * @param abilityName - the name of the ability
+     * @param ability - the ability to cast
      */
-    public void castAbility(String abilityName){
-        Ability ability = currentPlayer.abilities.get(abilityName);
+    public void castAbility(Ability ability){
         if(ability.damage > 0){
             enemies.forEach((id ,enemy) -> {
                 enemy.changeHealth((ability.damage) * -1);

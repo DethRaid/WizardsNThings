@@ -88,16 +88,16 @@ public class AbilityDAO extends DAOBase {
         }
     }
 
-    public Map<String, Ability> getAllAbilitiesForPlayer(Player player) {
+    public List<Ability> getAllAbilitiesForPlayer(Player player) {
         try(Connection connection = getDBConnection()) {
             PreparedStatement getAbilitiesForPlayerStatement = connection.prepareStatement(GET_ABILITIES_FOR_PLAYER);
             getAbilitiesForPlayerStatement.setString(1, player.name);
             ResultSet abilitiesSet = getAbilitiesForPlayerStatement.executeQuery();
 
-            Map<String, Ability> abilities = new HashMap<>();
+            List<Ability> abilities = new ArrayList<>();
             while(abilitiesSet.next()) {
                 Ability ability = new Ability(abilitiesSet);
-                abilities.put(ability.name, ability);
+                abilities.add(ability);
             }
 
             return abilities;

@@ -108,19 +108,8 @@ public class GameView {
         new ActionListDialogBuilder()
                 .setTitle("WizardsNThings")
                 .setDescription("Live out your fantasy as a wizard in this new\nand exciting text based dungeon crawler.")
-                .addAction("New Game", new Runnable() {
-                    @Override
-                    public void run() {
-                        startNewGame();
-                        return;
-                    }
-                })
-                .addAction("Previous Saves", new Runnable() {
-                    @Override
-                    public void run() {
-                        listPreviousSaves();
-                    }
-                })
+                .addAction("New Game", this::startNewGame)
+                .addAction("Previous Saves", this::listPreviousSaves)
                 .build()
                 .showDialog(gui);
 
@@ -158,7 +147,7 @@ public class GameView {
     private void renderAreaDescription(){
         TextBox title = new TextBox(controller.getCurrentArea().name);
         TextBox description = new TextBox(controller.getCurrentArea().description);
-        long alive = controller.getAllEnemies().values().stream().filter(d -> d.isDead == false).count();
+        long alive = controller.getAllEnemies().values().stream().filter(d -> !d.isDead).count();
         TextBox enemies =  new TextBox("Before you stands " + alive + " enemies!");
 
         Panel panel = Panels.horizontal(title, description, enemies, new Separator(Direction.HORIZONTAL));
@@ -177,19 +166,11 @@ public class GameView {
           new ActionListDialogBuilder()
                 .setTitle("Reward")
                 .setDescription("A treasure chest springs open before you, do you wish to change weapons?")
-                .addAction("Change to " + controller.getTreasure(), new Runnable() {
-                    @Override
-                    public void run() {
-                        controller.changeWeapon();
-                        renderPlayerOptionsRoom();
-                    }
+                .addAction("Change to " + controller.getTreasure(), () -> {
+                    controller.changeWeapon();
+                    renderPlayerOptionsRoom();
                 })
-                .addAction("Keep current " + controller.getCurrentWeapon(), new Runnable() {
-                    @Override
-                    public void run() {
-                        renderPlayerOptionsRoom();
-                    }
-                })
+                .addAction("Keep current " + controller.getCurrentWeapon(), this::renderPlayerOptionsRoom)
                 .setCanCancel(false)
                 .build()
                 .showDialog(gui);
@@ -206,18 +187,8 @@ public class GameView {
         new ActionListDialogBuilder()
                 .setTitle("Combat Phase")
                 .setDescription("Defeat the enemies to move forward!")
-                .addAction("Attack with " + controller.getCurrentWeapon(), new Runnable() {
-                    @Override
-                    public void run() {
-                        selectPlayerTarget();
-                    }
-                })
-                .addAction("Select Ability", new Runnable() {
-                    @Override
-                    public void run() {
-                        selectPlayerAbility();
-                    }
-                })
+                .addAction("Attack with " + controller.getCurrentWeapon(), this::selectPlayerTarget)
+                .addAction("Select Ability", this::selectPlayerAbility)
                 .build()
                 .showDialog(gui);
     }
@@ -229,12 +200,9 @@ public class GameView {
         Map<Integer, Enemy> enemies = controller.getAllEnemies();
         ActionListBox list = new ActionListBox();
         enemies.forEach((id, enemy) -> {
-            list.addItem(enemy.name + " " + id, new Runnable() {
-                @Override
-                public void run() {
-                    controller.Attack(id);
-                    renderArea();
-                }
+            list.addItem(enemy.name + " " + id, () -> {
+                controller.Attack(id);
+                renderArea();
             });
         });
 
@@ -244,23 +212,15 @@ public class GameView {
      * Select player ability during combat phase
      */
     public void selectPlayerAbility() {
-        Set<String> abilities = controller.getAbilities();
+        List<Ability> abilities = controller.getAbilities();
         ActionListBox list = new ActionListBox();
-        abilities.forEach((name) -> {
-            list.addItem(name, new Runnable() {
-                @Override
-                public void run() {
-                   controller.castAbility(name);
-                    renderArea();
-                }
+        abilities.forEach((ability) -> {
+            list.addItem(ability.name, () -> {
+               controller.castAbility(ability);
+                renderArea();
             });
         });
-        list.addItem("Cancel", new Runnable() {
-            @Override
-            public void run() {
-                renderPlayerOptionsCombat();
-            }
-        });
+        list.addItem("Cancel", this::renderPlayerOptionsCombat);
     }
 
     /**
@@ -277,35 +237,23 @@ public class GameView {
         new ActionListDialogBuilder()
                 .setTitle("Pick the next direction")
                 .setDescription("Around you, four doors open. Chose wisely...")
-                .addAction("North - " + areas.get(0).description, new Runnable() {
-                    @Override
-                    public void run() {
-                        controller.setCurrentArea(areas.get(0));
-                        renderArea();
-                    }
+                .addAction("North - " + areas.get(0).description, () -> {
+                    controller.setCurrentArea(areas.get(0));
+                    renderArea();
                 })
-                .addAction("South - " + areas.get(1).description, new Runnable() {
-                    @Override
-                    public void run() {
-                        controller.setCurrentArea(areas.get(1));
-                        renderArea();
-                    }
+                .addAction("South - " + areas.get(1).description, () -> {
+                    controller.setCurrentArea(areas.get(1));
+                    renderArea();
                 })
-                .addAction("West - " + areas.get(2).description, new Runnable() {
-                    @Override
-                    public void run() {
-                        // set currArea as cleared
-                        controller.setCurrentArea(areas.get(2));
-                        renderArea();
-                    }
+                .addAction("West - " + areas.get(2).description, () -> {
+                    // set currArea as cleared
+                    controller.setCurrentArea(areas.get(2));
+                    renderArea();
                 })
-                .addAction("East - " + areas.get(3).description, new Runnable() {
-                    @Override
-                    public void run() {
-                        // set currArea as cleared
-                        controller.setCurrentArea(areas.get(3));
-                        renderArea();
-                    }
+                .addAction("East - " + areas.get(3).description, () -> {
+                    // set currArea as cleared
+                    controller.setCurrentArea(areas.get(3));
+                    renderArea();
                 })
                 .setCanCancel(false)
                 .build()

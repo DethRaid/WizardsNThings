@@ -4,9 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
+import java.util.*;
 
 import static model.DAOBase.getDBConnection;
 
@@ -36,7 +34,7 @@ public class Player extends Observable implements ISaveable {
     public int maxHealth;
     public Weapon weapon;
     public Area currentArea;
-    public Map<String, Ability> abilities = new HashMap<>();
+    public List<Ability> abilities = new ArrayList<>();
 
     private AbilityDAO abilityDAO = new AbilityDAO();
 
@@ -53,7 +51,6 @@ public class Player extends Observable implements ISaveable {
         this.currentHealth = 10;
         //Starting area will be set in the controller
         this.currentArea = null;
-        this.abilities = new HashMap<>();
     }
 
     /**
@@ -115,7 +112,7 @@ public class Player extends Observable implements ISaveable {
             throw new RuntimeException("Could not save player " + name, e);
         }
 
-        for(Ability ability : abilities.values()) {
+        for(Ability ability : abilities) {
             if(!abilityDAO.playerAbilityIsSaved(name, ability.id)) {
                 try(Connection connection = getDBConnection();
                     PreparedStatement statement = connection.prepareStatement(SAVE_PLAYER_ABILITY)) {

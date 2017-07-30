@@ -136,7 +136,7 @@ public class DBPopulator {
             for(int i = 0; i < player.experience / 1000; i++) {
                 int abilityIndex = rand.nextInt(abilities.size());
                 Ability ability = abilities.get(abilityIndex);
-                player.abilities.put(ability.name, ability);
+                player.abilities.add(ability);
             }
 
             player.save();
