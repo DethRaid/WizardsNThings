@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class AreaDAO extends DAOBase {
     private static final String GET_ALL_AREAS   = "SELECT * FROM area;";
     private static final String GET_AREA_BY_ID = "SELECT * FROM area WHERE area.id = ?;";
-    private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_id, count FROM area_enemies WHERE area_enemies.area_id = ?;";
+    private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_name, count FROM area_enemies WHERE area_enemies.area_id = ?;";
     private static final String GET_NUMBER_CLEARED_ROOMS = "SELECT COUNT(area_id) as num FROM cleared_areas WHERE cleared_area.player_id = ?;";
 
     private static final String CREATE_AREA_TABLE =
