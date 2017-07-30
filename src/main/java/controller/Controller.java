@@ -250,7 +250,7 @@ public class Controller {
      * @return a list of the possible areas
      */
     public List<Area> getPossibleAreas(){
-        return areaDAO.getAreasInLevelRange(getPlayerLevel(), 4);
+        return areaDAO.getAreasInLevelRange(getLevel(), 4);
     }
 
     /**
@@ -325,17 +325,6 @@ public class Controller {
 
 
     //CONTROLLER INITIALIZATION HELPERS
-
-    /**
-     * Calculate the Player's level
-     *
-     * Currently 1 level equals 10 experience points
-     *
-     * @return current level
-     */
-    private int getPlayerLevel(){
-        return (currentPlayer.experience/10);
-    }
 
     /**
      * Instantiate all of the enemies in the area and give them each a unique ID
