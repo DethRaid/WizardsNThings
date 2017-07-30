@@ -39,7 +39,9 @@ public class Controller {
         treasureDAO.createTable();
         AbilityDAO abilityDAO = new AbilityDAO();
         abilityDAO.createTables();
-        DBPopulator.iReallyWantFreeFunctions();
+        if(!enemyDAO.hasExistingData()){
+            DBPopulator.iReallyWantFreeFunctions();
+        }
     }
 
     public void createEnemies(){
@@ -171,8 +173,31 @@ public class Controller {
         return playerDAO.getNamesOfAllPlayers();
     }
 
+    /**
+     * Get the current area that the player is in
+     * @return the Area
+     */
     public Area getCurrentArea(){
         return currentPlayer.currentArea;
+    }
+
+    /**
+     * Get the players current health
+     * @return players' health
+     */
+    public int getHP(){
+        return currentPlayer.currentHealth;
+    }
+
+    /**
+     * Get the current level of the player
+     * Level is calculated by total XP / 1000
+     * If the above calculation is less than 0, return 1
+     * @return Player's level
+     */
+    public int getLevel(){
+        int level = (currentPlayer.experience / 1000);
+        return (level > 1) ? level : 1;
     }
 
     /**
