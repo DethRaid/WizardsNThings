@@ -49,6 +49,7 @@ public class Controller {
      * @param a - the area to set
      */
     public void setCurrentArea(Area a){
+        if(area != null){area.setAreaAsCleared(currentPlayer.name);}
         area = a;
         currentPlayer.currentArea = a;
         populateEnemies();
