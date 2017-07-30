@@ -1,8 +1,10 @@
-package model;
+package wmt.model;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import wnt.model.Weapon;
+import wnt.model.WeaponDAO;
 
 /**
  * @author ddubois

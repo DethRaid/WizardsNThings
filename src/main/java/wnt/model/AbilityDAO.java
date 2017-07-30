@@ -1,15 +1,11 @@
-package model;
-
-import com.sun.org.apache.regexp.internal.RE;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author ddubois
@@ -18,7 +14,7 @@ import java.util.Map;
 public class AbilityDAO extends DAOBase {
     private static String CREATE_ABILITY_TABLE =
             "CREATE TABLE IF NOT EXISTS ability(" +
-             "id INT PRIMARY KEY NOT NULL" +
+             "id IDENTITY" +
             ",name VARCHAR(128) NOT NULL" +
             ",damage INT NOT NULL" +
             ",num_targets INT NOT NULL" +
@@ -31,6 +27,8 @@ public class AbilityDAO extends DAOBase {
             "CREATE TABLE IF NOT EXISTS player_ability(" +
              "player_name VARCHAR(128) NOT NULL" +
             ",ability_id INT NOT NULL" +
+            ",FOREIGN KEY (player_name) REFERENCES player(name)" +
+            ",FOREIGN KEY (ability_id) REFERENCES ability(id)" +
             ");";
 
     private static String GET_PLAYER_ABILITY_ROW =

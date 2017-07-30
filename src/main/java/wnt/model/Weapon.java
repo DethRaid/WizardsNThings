@@ -1,17 +1,17 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Observable;
 
-import static model.DAOBase.getDBConnection;
+import static wnt.model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois
  * @since 14-Jul-17
  */
-public class Weapon extends Observable {
+public class Weapon extends Observable implements ISaveable {
     private static final String SAVE =
             "INSERT INTO weapon(name, damage, attack_speed) VALUES (?, ?, ?);";
 
@@ -20,6 +20,7 @@ public class Weapon extends Observable {
     public int damage;
     public int attackSpeed;
 
+    @Override
     public void save() {
         try(Connection connection = getDBConnection();
                 PreparedStatement saveStatement = connection.prepareStatement(SAVE)) {

@@ -1,11 +1,11 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Observable;
 
-import static model.DAOBase.getDBConnection;
+import static wnt.model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois

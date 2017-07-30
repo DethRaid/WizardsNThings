@@ -1,4 +1,4 @@
-package model;
+package wnt.model;
 
 /**
  * @author ddubois

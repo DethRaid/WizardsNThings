@@ -1,10 +1,7 @@
-package model;
+package wmt.model;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import wnt.model.EnemyDAO;
 
 /**
  * @author ddubois

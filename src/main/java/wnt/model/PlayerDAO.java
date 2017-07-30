@@ -1,4 +1,4 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,12 +26,8 @@ public class PlayerDAO extends DAOBase {
             ",maxHealth         int             not null" +
             ",weapon_id         INT             NOT NULL" +
             ",currentArea_id    INT             NOT NULL" +
-            ");";
-
-    private static String CREATE_PLAYER_ABILITY_TABLE =
-            "CREATE TABLE IF NOT EXISTS player_abilities(" +
-             "player_id INT NOT NULL" +
-            ",ability_id INT NOT NULL" +
+            ",FOREIGN KEY (weapon_id) REFERENCES weapon(id)" +
+            ",FOREIGN KEY (currentArea_id) REFERENCES area(id)" +
             ");";
 
     private WeaponDAO weaponDAO = new WeaponDAO();
@@ -46,14 +42,6 @@ public class PlayerDAO extends DAOBase {
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not create the players table", e);
-        }
-
-        try(Connection connection = getDBConnection()) {
-            PreparedStatement createAbilityTableStatement = connection.prepareStatement(CREATE_PLAYER_ABILITY_TABLE);
-            createAbilityTableStatement.execute();
-            connection.commit();
-        } catch(SQLException e) {
-            throw new RuntimeException("Could not create the player ability table", e);
         }
     }
 

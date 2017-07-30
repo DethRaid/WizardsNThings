@@ -1,4 +1,4 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +18,9 @@ public class TreasureDAO extends DAOBase {
              "id     INT     NOT NULL    PRIMARY KEY" +
             ",name  VARCHAR(255)    NOT NULL" +
             ",weapon_id INT NOT NULL" +
+            ",FOREIGN KEY (weapon_id) REFERENCES weapon(id)" +
             ");";
-    public static final String DELETE_TREASURE =
+    private static final String DELETE_TREASURE =
             "DELETE FROM treasure WHERE treasure.id = ?;";
 
     private final WeaponDAO weaponDAO = new WeaponDAO();

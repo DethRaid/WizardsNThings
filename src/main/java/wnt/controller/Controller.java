@@ -1,8 +1,7 @@
-package controller;
+package wnt.controller;
 
-import model.*;
+import wnt.model.*;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -27,17 +26,19 @@ public class Controller {
      * Constructor
      */
     public Controller(){
-        playerDAO = new PlayerDAO();
-        PlayerDAO.createTable();
-        areaDAO = new AreaDAO();
-        AreaDAO.createTables();
-        enemyDAO = new EnemyDAO();
-        EnemyDAO.createTable();
-        weaponDAO = new WeaponDAO();
         WeaponDAO.createTable();
-        treasureDAO = new TreasureDAO();
         TreasureDAO.createTable();
+        EnemyDAO.createTable();
+        AreaDAO.createTables();
+        PlayerDAO.createTable();
         AbilityDAO.createTables();
+        AreaDAO.createClearedAreasTable();
+
+        playerDAO = new PlayerDAO();
+        areaDAO = new AreaDAO();
+        enemyDAO = new EnemyDAO();
+        weaponDAO = new WeaponDAO();
+        treasureDAO = new TreasureDAO();
         if(!enemyDAO.hasExistingData()){
             DBPopulator.iReallyWantFreeFunctions();
         }

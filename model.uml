@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>model</OriginalElement>
+  <nodes>
+    <node x="207.99999999999997" y="254.0">model.Treasure</node>
+    <node x="187.0" y="332.0">model.DaoTestBase</node>
+    <node x="357.0" y="415.0">model.PlayerDAOTest</node>
+    <node x="0.0" y="493.0">model.WeaponDAOTest</node>
+    <node x="336.0" y="254.0">model.Enemy</node>
+    <node x="723.0" y="93.0">model.PlayerDAO</node>
+    <node x="436.0" y="93.0">model.TreasureDAO</node>
+    <node x="383.0" y="493.0">model.Weapon</node>
+    <node x="171.0" y="415.0">model.TreasureDAOTest</node>
+    <node x="594.0" y="93.0">model.AreaDAO</node>
+    <node x="0.0" y="415.0">model.EnemyDAOTest</node>
+    <node x="206.0" y="493.0">model.DBPopulator</node>
+    <node x="296.0" y="93.0">model.AbilityDAO</node>
+    <node x="205.49999999999997" y="171.0">model.ISaveable</node>
+    <node x="98.99999999999997" y="254.0">model.Player</node>
+    <node x="449.0" y="254.0">model.Ability</node>
+    <node x="153.0" y="93.0">model.EnemyDAO</node>
+    <node x="0.0" y="93.0">model.WeaponDAO</node>
+    <node x="0.0" y="254.0">model.Area</node>
+    <node x="375.5" y="0.0">model.DAOBase</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="model.PlayerDAO" target="model.DAOBase">
+      <point x="0.0" y="-16.5" />
+      <point x="782.5" y="53.0" />
+      <point x="476.33333333333326" y="53.0" />
+      <point x="45.833333333333314" y="16.5" />
+    </edge>
+    <edge source="model.Enemy" target="model.ISaveable">
+      <point x="0.0" y="-16.5" />
+      <point x="382.5" y="234.0" />
+      <point x="284.6" y="234.0" />
+      <point x="22.600000000000023" y="16.5" />
+    </edge>
+    <edge source="model.Treasure" target="model.ISaveable">
+      <point x="0.0" y="-16.5" />
+      <point x="0.0" y="16.5" />
+    </edge>
+    <edge source="model.TreasureDAO" target="model.DAOBase">
+      <point x="0.0" y="-16.5" />
+      <point x="505.0" y="73.0" />
+      <point x="439.66666666666663" y="73.0" />
+      <point x="9.166666666666686" y="16.5" />
+    </edge>
+    <edge source="model.Player" target="model.ISaveable">
+      <point x="0.0" y="-16.5" />
+      <point x="143.49999999999997" y="234.0" />
+      <point x="239.39999999999998" y="234.0" />
+      <point x="-22.599999999999994" y="16.5" />
+    </edge>
+    <edge source="model.EnemyDAO" target="model.DAOBase">
+      <point x="0.0" y="-16.5" />
+      <point x="214.5" y="63.0" />
+      <point x="403.0" y="63.0" />
+      <point x="-27.5" y="16.5" />
+    </edge>
+    <edge source="model.PlayerDAOTest" target="model.DaoTestBase">
+      <point x="0.0" y="-16.5" />
+      <point x="430.5" y="390.0" />
+      <point x="298.66666666666663" y="390.0" />
+      <point x="44.66666666666663" y="16.5" />
+    </edge>
+    <edge source="model.AbilityDAO" target="model.DAOBase">
+      <point x="0.0" y="-16.5" />
+      <point x="356.0" y="73.0" />
+      <point x="421.33333333333326" y="73.0" />
+      <point x="-9.166666666666686" y="16.5" />
+    </edge>
+    <edge source="model.AreaDAO" target="model.DAOBase">
+      <point x="0.0" y="-16.5" />
+      <point x="648.5" y="63.0" />
+      <point x="458.0" y="63.0" />
+      <point x="27.5" y="16.5" />
+    </edge>
+    <edge source="model.TreasureDAOTest" target="model.DaoTestBase">
+      <point x="0.0" y="-16.5" />
+      <point x="0.0" y="16.5" />
+    </edge>
+    <edge source="model.WeaponDAO" target="model.DAOBase">
+      <point x="0.0" y="-16.5" />
+      <point x="66.5" y="53.0" />
+      <point x="384.66666666666663" y="53.0" />
+      <point x="-45.833333333333314" y="16.5" />
+    </edge>
+    <edge source="model.EnemyDAOTest" target="model.DaoTestBase">
+      <point x="0.0" y="-16.5" />
+      <point x="75.5" y="390.0" />
+      <point x="209.33333333333334" y="390.0" />
+      <point x="-44.66666666666666" y="16.5" />
+    </edge>
+    <edge source="model.Area" target="model.ISaveable">
+      <point x="0.0" y="-16.5" />
+      <point x="39.5" y="224.0" />
+      <point x="216.79999999999998" y="224.0" />
+      <point x="-45.19999999999999" y="16.5" />
+    </edge>
+    <edge source="model.Ability" target="model.ISaveable">
+      <point x="0.0" y="-16.5" />
+      <point x="494.0" y="224.0" />
+      <point x="307.19999999999993" y="224.0" />
+      <point x="45.19999999999999" y="16.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="421.0" y="263.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

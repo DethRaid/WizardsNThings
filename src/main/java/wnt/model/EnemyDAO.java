@@ -1,4 +1,4 @@
-package model;
+package wnt.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
