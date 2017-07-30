@@ -1,7 +1,5 @@
 package model;
 
-import sun.security.x509.AttributeNameEnumeration;
-
 import java.util.*;
 
 /**
@@ -18,6 +16,7 @@ public class DBPopulator {
     private static List<String> weaponNames = new ArrayList<>();
     private static List<String> heroNames = new ArrayList<>();
     private static List<String> areaNames = new ArrayList<>();
+    private static List<String> abilityNames = new ArrayList<>();
 
     public static void iReallyWantFreeFunctions() {
         initAdjectives();
@@ -25,6 +24,7 @@ public class DBPopulator {
         initWeaponNames();
         initHeroNames();
         initAreaNames();
+        initAbilityNames();
 
         Random rand = new Random();
 
@@ -100,6 +100,63 @@ public class DBPopulator {
                 areas.add(area);
             }
         }
+
+        List<Ability> abilities = new ArrayList<>();
+        id = 1;
+        for(String abilityName : abilityNames) {
+            Ability ability = new Ability();
+            ability.id = id;
+            ability.name = abilityName;
+            ability.damage = rand.nextInt(150);
+            ability.numTargets = rand.nextInt(5);
+            ability.healthHealed = rand.nextBoolean() ? 0 : rand.nextInt(50);
+            ability.description = "Super powerful";
+            ability.levelAvailableToPlayer = (ability.damage + ability.healthHealed) * ability.numTargets / 100;
+            ability.save();
+            abilities.add(ability);
+
+            id++;
+        }
+
+        for(String heroName : heroNames) {
+            Player player = new Player();
+            player.name = heroName;
+            player.experience = rand.nextInt(50) * 1000;
+            player.strength = (short) rand.nextInt(100);
+            player.defence = (short) rand.nextInt(100);
+            player.maxHealth = rand.nextInt(5000);
+            player.experience = Math.max(player.strength, player.defence) / 2 * 1000;
+            player.currentHealth = rand.nextInt(player.maxHealth);
+
+            int areaIndex = rand.nextInt(areas.size());
+            player.currentArea = areas.get(areaIndex);
+
+            int weaponIndex = rand.nextInt(weapons.size());
+            player.weapon = weapons.get(weaponIndex);
+
+            for(int i = 0; i < player.experience / 1000; i++) {
+                int abilityIndex = rand.nextInt(abilities.size());
+                Ability ability = abilities.get(abilityIndex);
+                player.abilities.put(ability.name, ability);
+            }
+
+            player.save();
+
+        }
+    }
+
+    private static void initAbilityNames() {
+        abilityNames.add("Fireball");
+        abilityNames.add("Lightning Bolt");
+        abilityNames.add("Heals");
+        abilityNames.add("Levitation");
+        abilityNames.add("Accio");
+        abilityNames.add("Balefire");
+        abilityNames.add("Knowledge");
+        abilityNames.add("Giving Birth");
+        abilityNames.add("Yelling");
+        abilityNames.add("Coding");
+        abilityNames.add("The Room");
     }
 
     private static void initAreaNames() {

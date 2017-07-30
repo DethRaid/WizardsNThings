@@ -22,9 +22,11 @@ public class Player extends Observable implements ISaveable {
     private static final String SAVE_PLAYER = "UPDATE player " +
             "SET strength = ?, defence = ?, experience = ?, currentHealth = ?, maxHealth = ?, weapon_id = ?, currentArea_id = ? " +
             "WHERE name = ?;";
-
     private static final String CREATE_PLAYER = "INSERT INTO player(strength, defence, experience, currentHealth, maxHealth, weapon_id, currentArea_id, name) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+    private static final String SAVE_PLAYER_ABILITY =
+            "INSERT INTO player_ability(player_name, ability_id) VALUES (?, ?);";
 
     public String name;
     public short strength;
@@ -34,7 +36,9 @@ public class Player extends Observable implements ISaveable {
     public int maxHealth;
     public Weapon weapon;
     public Area currentArea;
-    public Map<String, Ability> abilities;
+    public Map<String, Ability> abilities = new HashMap<>();
+
+    private AbilityDAO abilityDAO = new AbilityDAO();
 
     public Player() {}
 
@@ -109,6 +113,21 @@ public class Player extends Observable implements ISaveable {
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not save player " + name, e);
+        }
+
+        for(Ability ability : abilities.values()) {
+            if(!abilityDAO.playerAbilityIsSaved(name, ability.id)) {
+                try(Connection connection = getDBConnection();
+                    PreparedStatement statement = connection.prepareStatement(SAVE_PLAYER_ABILITY)) {
+                    statement.setString(1, name);
+                    statement.setInt(2, ability.id);
+                    statement.execute();
+                    connection.commit();
+
+                } catch(SQLException e) {
+                    throw new RuntimeException("Could not save ability " + ability.name, e);
+                }
+            }
         }
     }
 
