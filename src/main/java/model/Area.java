@@ -1,14 +1,22 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.Observable;
+
+import static model.DAOBase.getDBConnection;
 
 /**
  * @author ddubois
  * @since 7/11/17.
  */
 public class Area extends Observable {
+    private static final String SET_CLEARED =
+            "INSERT INTO cleared_areas(area_id, player_id) values (?, ?);";
+
     public int id;
     public String name;
     public String description;
@@ -40,7 +48,16 @@ public class Area extends Observable {
      * @param playerName The name of the player who cleared this area
      */
     public void setAreaAsCleared(String playerName) {
+        try(Connection connection = getDBConnection();
+            PreparedStatement statement = connection.prepareStatement(SET_CLEARED)) {
+            statement.setInt(1, id);
+            statement.setString(2, playerName);
+            statement.execute();
+            connection.commit();
 
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not set area " + id + " to be cleared by " + playerName, e);
+        }
     }
 
     @Override

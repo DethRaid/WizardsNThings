@@ -38,8 +38,8 @@ public class AreaDAO extends DAOBase {
 
     private static final String CREATE_CLEARED_AREAS_TABLE =
             "CREATE TABLE IF NOT EXISTS cleared_areas(" +
-             "area_id   INT     NOT NULL" +
-            ",player_id INT     NOT NULL" +
+             "area_id   INT             NOT NULL" +
+            ",player_id VARCHAR(255)    NOT NULL" +
             ");";
 
     private final TreasureDAO treasureDAO = new TreasureDAO();
