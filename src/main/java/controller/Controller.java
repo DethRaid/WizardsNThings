@@ -74,7 +74,7 @@ public class Controller {
     public void createNewPlayer(String name){
         currentPlayer = new Player(name);
         //TODO - Set the players' current weapon
-        currentPlayer.currentArea = areaDAO.getAreasInLevelRange(getLevel(), 1).get(0);
+        currentPlayer.currentArea = areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 1).get(0);
         currentPlayer.save();
         area = currentPlayer.currentArea;
         populateEnemies();
@@ -103,8 +103,8 @@ public class Controller {
      * Get the players current health
      * @return players' health
      */
-    public int getHP(){
-        return currentPlayer.currentHealth;
+    public String getHP(){
+        return Integer.toString(currentPlayer.currentHealth);
     }
 
     /**
@@ -113,9 +113,17 @@ public class Controller {
      * If the above calculation is less than 0, return 1
      * @return Player's level
      */
-    private int getLevel(){
+    public String getLevel(){
         int level = (currentPlayer.experience / 1000);
-        return (level > 1) ? level : 1;
+        return (level > 1) ? Integer.toString(level) : "1";
+    }
+
+    /**
+     * Get current player's experience
+     * @return
+     */
+    public String getExperience(){
+        return Integer.toString(currentPlayer.experience);
     }
 
     /**
@@ -141,8 +149,8 @@ public class Controller {
      *
      * @return player's current health
      */
-    public int getPlayerHealth(){
-        return currentPlayer.currentHealth;
+    public String getPlayerHealth(){
+        return Integer.toString(currentPlayer.currentHealth);
     }
 
     /**
@@ -168,7 +176,7 @@ public class Controller {
      * @return a list of the possible areas
      */
     public List<Area> getPossibleAreas(){
-        return areaDAO.getAreasInLevelRange(getLevel(), 4);
+        return areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 4);
     }
 
     /**
