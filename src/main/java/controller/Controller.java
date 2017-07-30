@@ -93,8 +93,7 @@ public class Controller {
         area.name = "Swamp";
         area.description = "Muggy and hot, with the smell of decay and slow moving things.";
         area.treasure = treasure;
-        area.enemyName = "spider";
-        area.enemyNumber = 1;
+        area.enemies.put(enemyDAO.getEnemy("spider"), 1);
         area.save();
 
         area = new Area();
@@ -102,8 +101,7 @@ public class Controller {
         area.name = "Wasteland";
         area.description = "Sand stretches before you, it is hot and oppressive";
         area.treasure = treasure;
-        area.enemyName = "goblin";
-        area.enemyNumber = 1;
+        area.enemies.put(enemyDAO.getEnemy("goblin"), 1);
         area.save();
 
         area = new Area();
@@ -111,8 +109,7 @@ public class Controller {
         area.name = "Frozen Tundra";
         area.description = "Icicles form on your hair and you feel a bone chilling cold. Snow dots the landscape";
         area.treasure = treasure;
-        area.enemyName = "orc";
-        area.enemyNumber = 1;
+        area.enemies.put(enemyDAO.getEnemy("orc"), 1);
         area.save();
 
         area = new Area();
@@ -121,8 +118,7 @@ public class Controller {
         area.description = "Fire and magma explodes around you. The acrid smell of sulfer assaults your senses.";
         area.treasure = treasure;
         enemies = new HashMap<>();
-        area.enemyName = "orc";
-        area.enemyNumber = 1;
+        area.enemies.put(enemyDAO.getEnemy("orc"), 1);
         area.save();
     }
 

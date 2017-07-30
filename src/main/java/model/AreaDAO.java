@@ -34,6 +34,7 @@ public class AreaDAO extends DAOBase {
             "CREATE TABLE IF NOT EXISTS area_enemies(" +
              "enemy_name    VARCHAR(128)    NOT NULL" +
             ",area_id       INT             NOT NULL" +
+            ",count         INT             NOT NULL" +
             ");";
 
     private static final String CREATE_CLEARED_AREAS_TABLE =

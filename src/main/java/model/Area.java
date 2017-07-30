@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.sql.Connection;
@@ -21,16 +22,18 @@ public class Area extends Observable implements ISaveable {
             "INSERT INTO cleared_areas(area_id, player_id) values (?, ?);";
 
     private static final String SAVE =
-            "INSERT INTO area(id, name, description, treasure_id, enemy_id, count) VALUES (?, ?, ?, ?, ?, ?);";
+            "INSERT INTO area(id, name, description, treasure_id) VALUES (?, ?, ?, ?);";
+
+    private static final String SAVE_AREA_ANEMEIS =
+            "INSERT INTO area_enemies(enemy_name, area_id, count) VALUES (?, ?, ?);";
+
     public int id;
     public String name;
     public String description;
     public Treasure treasure;
-    public String enemyName;
-    public int enemyNumber;
 
     // Map from enemy to the number of enemies in the area
-    public Map<Enemy, Integer> enemies;
+    public Map<Enemy, Integer> enemies = new HashMap<>();
 
     @Override
     public void save() {
@@ -40,14 +43,29 @@ public class Area extends Observable implements ISaveable {
             saveStatement.setString(2, name);
             saveStatement.setString(3, description);
             saveStatement.setInt(4, treasure.id);
-            saveStatement.setString(5, enemyName);
-            saveStatement.setInt(6, enemyNumber);
 
             saveStatement.execute();
             connection.commit();
 
         } catch (SQLException e) {
             throw new RuntimeException("Could not save area " + name, e);
+        }
+
+        try(Connection connection = getDBConnection();
+            PreparedStatement statement = connection.prepareStatement(SAVE_AREA_ANEMEIS)) {
+
+            for(Map.Entry<Enemy, Integer> entry : enemies.entrySet()) {
+                statement.setString(1, entry.getKey().name);
+                statement.setInt(2, id);
+                statement.setInt(3, entry.getValue());
+
+                statement.execute();
+            }
+
+            connection.commit();
+
+        } catch(SQLException e) {
+            throw new RuntimeException("Could not save the enemies in this area", e);
         }
     }
     /**
