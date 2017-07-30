@@ -36,7 +36,7 @@ public class Player extends Observable implements ISaveable {
     public int maxHealth;
     public Weapon weapon;
     public Area currentArea;
-    public Map<String, Ability> abilities;
+    public Map<String, Ability> abilities = new HashMap<>();
 
     private AbilityDAO abilityDAO = new AbilityDAO();
 

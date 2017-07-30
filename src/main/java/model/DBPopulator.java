@@ -1,7 +1,5 @@
 package model;
 
-import sun.security.x509.AttributeNameEnumeration;
-
 import java.util.*;
 
 /**
@@ -127,7 +125,7 @@ public class DBPopulator {
             player.strength = (short) rand.nextInt(100);
             player.defence = (short) rand.nextInt(100);
             player.maxHealth = rand.nextInt(5000);
-            player.experience = Math.max(player.strength, player.defence) / 2;
+            player.experience = Math.max(player.strength, player.defence) / 2 * 1000;
             player.currentHealth = rand.nextInt(player.maxHealth);
 
             int areaIndex = rand.nextInt(areas.size());
@@ -135,6 +133,15 @@ public class DBPopulator {
 
             int weaponIndex = rand.nextInt(weapons.size());
             player.weapon = weapons.get(weaponIndex);
+
+            for(int i = 0; i < player.experience / 1000; i++) {
+                int abilityIndex = rand.nextInt(abilities.size());
+                Ability ability = abilities.get(abilityIndex);
+                player.abilities.put(ability.name, ability);
+            }
+
+            player.save();
+
         }
     }
 
