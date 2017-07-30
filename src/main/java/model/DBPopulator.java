@@ -35,7 +35,7 @@ public class DBPopulator {
                 String name = adjective + " " + enemyName;
                 Enemy enemy = new Enemy();
                 enemy.name = name;
-                enemy.level = rand.nextInt(50);
+                enemy.level = rand.nextInt(50) + 1;
 
                 enemy.save();
                 enemies.add(enemy);
@@ -49,8 +49,8 @@ public class DBPopulator {
                 Weapon weapon = new Weapon();
                 weapon.name = adjective + " " + weaponName;
                 weapon.id = id;
-                weapon.damage = rand.nextInt(100);
-                weapon.attackSpeed = rand.nextInt(5);
+                weapon.damage = rand.nextInt(100) + 1;
+                weapon.attackSpeed = rand.nextInt(5) + 1;
                 weapon.save();
                 weapons.add(weapon);
 
@@ -84,7 +84,7 @@ public class DBPopulator {
                 for(int i = 0; i < numEnemies; i++) {
                     int enemyIndex = rand.nextInt(enemies.size());
                     Enemy enemy = enemies.get(enemyIndex);
-                    enemyCounts.put(enemy, rand.nextInt(5));
+                    enemyCounts.put(enemy, rand.nextInt(5) + 1);
                 }
 
                 area.enemies = enemyCounts;
@@ -121,11 +121,11 @@ public class DBPopulator {
             Player player = new Player();
             player.name = heroName;
             player.experience = rand.nextInt(50) * 1000;
-            player.strength = (short) rand.nextInt(100);
-            player.defence = (short) rand.nextInt(100);
-            player.maxHealth = rand.nextInt(5000);
+            player.strength = (short) (rand.nextInt(100) + 1);
+            player.defence = (short) (rand.nextInt(100) + 1);
+            player.maxHealth = rand.nextInt(5000) + 1;
             player.experience = Math.max(player.strength, player.defence) / 2 * 1000;
-            player.currentHealth = rand.nextInt(player.maxHealth);
+            player.currentHealth = rand.nextInt(player.maxHealth) + 1;
 
             int areaIndex = rand.nextInt(areas.size());
             player.currentArea = areas.get(areaIndex);
