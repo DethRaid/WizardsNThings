@@ -4,6 +4,7 @@ import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialog;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
+import com.googlecode.lanterna.gui2.dialogs.TextInputDialogResultValidator;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
@@ -16,6 +17,7 @@ import controller.Controller;
 
 import javax.xml.soap.Text;
 import java.io.IOException;
+import java.io.SerializablePermission;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Set;
@@ -46,6 +48,7 @@ public class GameView {
      */
     private static MultiWindowTextGUI gui;
     private static BasicWindow menuWindow;
+    private static BasicWindow areaWindow;
 
 
 
@@ -119,11 +122,23 @@ public class GameView {
      * Creates a new player using inputted string and starts the game
      */
     private void startNewGame() {
+        TextInputDialogResultValidator validator = new TextInputDialogResultValidator() {
+            @Override
+            public String validate(String content) {
+                Boolean valid = controller.getAllPlayers().contains(content);
+                if(!valid){
+                    return "Player name already exists, please chose another name.";
+                }
+                return null;
+            }
+        };
         String player = new TextInputDialogBuilder()
                 .setTitle("New Player Name")
                 .setDescription("Enter your player's name")
+                .setValidator(validator)
                 .build()
                 .showDialog(gui);
+
         screen.clear();
         controller.createNewPlayer(player);
         renderArea();
@@ -145,18 +160,39 @@ public class GameView {
      * Renders an area's enemies and description
      */
     private void renderAreaDescription(){
-        TextBox title = new TextBox(controller.getCurrentArea().name);
-        TextBox description = new TextBox(controller.getCurrentArea().description);
-        long alive = controller.getAllEnemies().values().stream().filter(d -> !d.isDead).count();
-        TextBox enemies =  new TextBox("Before you stands " + alive + " enemies!");
+        Label title = new Label(controller.getCurrentArea().name);
+        Panel titlePane = new Panel();
+        titlePane.setLayoutManager(new LinearLayout(Direction.VERTICAL));
+        titlePane.addComponent(title);
 
-        Panel panel = Panels.horizontal(title, description, enemies, new Separator(Direction.HORIZONTAL));
+        Label description = new Label(controller.getCurrentArea().description);
+        long alive = controller.getAllEnemies().values().stream().filter(d -> !d.isDead).count();
+        Label enemies =  new Label("Before you stands " + alive + " enemies!");
+
+        Panel panel = Panels.grid(3,
+                description,
+                new Separator(Direction.VERTICAL),
+                new Label("Name: " + controller.getCurrentPlayerName()),
+
+                enemies,
+                new Separator(Direction.VERTICAL),
+                new Label("Health: " + controller.getHP()),
+
+                new Label(""),
+                new Separator(Direction.VERTICAL),
+                new Label("Exp: " + controller.getExperience() + "/1000"));
+
         controller.getAllEnemies().forEach((id, enemy) -> {
-            panel.addComponent(new TextBox(enemy.name + " - " + enemy.currentHealth + "current HP"));
+            panel.addComponent(new Label(enemy.name + " - " + enemy.currentHealth + " current HP"));
+            panel.addComponent(new Separator(Direction.VERTICAL));
+            panel.addComponent(new Label(""));
         });
-        BasicWindow areaWindow = new BasicWindow("WizardsNThings");
+        panel.addComponent(new Separator(Direction.HORIZONTAL));
+        titlePane.addComponent(panel);
+
+        areaWindow = new BasicWindow("WizardsNThings");
         areaWindow.setHints(Arrays.asList(Window.Hint.FULL_SCREEN));
-        areaWindow.setComponent(panel);
+        areaWindow.setComponent(titlePane);
     }
 
     /**
