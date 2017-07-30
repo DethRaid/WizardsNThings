@@ -13,7 +13,7 @@ import static model.DAOBase.getDBConnection;
  * @since 14-Jul-17
  */
 public class Ability extends Observable implements ISaveable {
-    public static String SAVE_ABILITY = "INSERT INTO ability(it, name, damage, num_targets, health_healed, description, level_available_to_player)" +
+    public static String SAVE_ABILITY = "INSERT INTO ability(id, name, damage, num_targets, health_healed, description, level_available_to_player)" +
             "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
     public int id;

@@ -33,12 +33,13 @@ public class Controller {
         areaDAO.createTables();
         enemyDAO = new EnemyDAO();
         enemyDAO.createTable();
-        createEnemies();
         weaponDAO = new WeaponDAO();
         weaponDAO.createTable();
         treasureDAO = new TreasureDAO();
         treasureDAO.createTable();
-        createWeapons();
+        AbilityDAO abilityDAO = new AbilityDAO();
+        abilityDAO.createTables();
+        DBPopulator.iReallyWantFreeFunctions();
     }
 
     public void createEnemies(){

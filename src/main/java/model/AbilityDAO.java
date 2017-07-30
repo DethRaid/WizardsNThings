@@ -29,7 +29,7 @@ public class AbilityDAO extends DAOBase {
 
     private static String CREATE_PLAYER_ABILITY_TABLE =
             "CREATE TABLE IF NOT EXISTS player_ability(" +
-             "player_name INT NOT NULL" +
+             "player_name VARCHAR(128) NOT NULL" +
             ",ability_id INT NOT NULL" +
             ");";
 

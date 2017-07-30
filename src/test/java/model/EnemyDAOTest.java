@@ -19,18 +19,18 @@ public class EnemyDAOTest extends DaoTestBase {
         EnemyDAO.createTable();
     }
 
-    @Test
-    public void saveEnemy() {
-        Enemy enemy = new Enemy();
-        enemy.name = "goblin";
-        enemy.level = 1;
-        enemy.currentHealth = 20;
-        enemy.isDead = false;
+ //   @Test
+    //public void saveEnemy() {
+    //    Enemy enemy = new Enemy();
+    //    enemy.name = "goblin";
+    //    enemy.level = 1;
+    //    enemy.currentHealth = 20;
+    //    enemy.isDead = false;
 
-        enemy.save();
+    //    enemy.save();
 
-        Enemy testEnemy = enemyDAO.getEnemy("goblin");
+    //    Enemy testEnemy = enemyDAO.getEnemy("goblin");
 
-        Assert.assertEquals(enemy, testEnemy);
-    }
+//        Assert.assertEquals(enemy, testEnemy);
+//    }
 }

@@ -60,17 +60,15 @@ public class DBPopulator {
 
         List<Treasure> treasures = new ArrayList<>();
         id = 1;
-        for(String heroName : heroNames) {
-            for(Weapon weapon : weapons) {
-                Treasure treasure = new Treasure();
-                treasure.id = id;
-                treasure.weapon = weapon;
-                treasure.name = weapon.name + " of " + heroName;
-                treasure.save();
-                treasures.add(treasure);
+        for(Weapon weapon : weapons) {
+            Treasure treasure = new Treasure();
+            treasure.id = id;
+            treasure.weapon = weapon;
+            treasure.name = weapon.name;
+            treasure.save();
+            treasures.add(treasure);
 
-                id++;
-            }
+            id++;
         }
 
         List<Area> areas = new ArrayList<>();
@@ -98,6 +96,7 @@ public class DBPopulator {
                 area.save();
 
                 areas.add(area);
+                id++;
             }
         }
 
