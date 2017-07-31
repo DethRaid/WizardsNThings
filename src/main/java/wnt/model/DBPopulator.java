@@ -83,7 +83,7 @@ public class DBPopulator {
                 for(int i = 0; i < numEnemies; i++) {
                     int enemyIndex = rand.nextInt(enemies.size());
                     Enemy enemy = enemies.get(enemyIndex);
-                    enemyCounts.put(enemy, rand.nextInt(5) + 1);
+                    enemyCounts.put(enemy, rand.nextInt(2) + 1);
                 }
 
                 area.enemies = enemyCounts;

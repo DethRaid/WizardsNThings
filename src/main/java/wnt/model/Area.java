@@ -27,6 +27,7 @@ public class Area extends Observable implements ISaveable {
     public String name;
     public String description;
     public Treasure treasure;
+    public boolean isCleared;
 
     // Map from enemy to the number of enemies in the area
     public Map<Enemy, Integer> enemies = new HashMap<>();

@@ -16,9 +16,10 @@ import java.util.stream.Collectors;
  */
 public class AreaDAO extends DAOBase {
     private static final String GET_ALL_AREAS   = "SELECT * FROM area;";
-    private static final String GET_AREA_BY_ID = "SELECT * FROM area WHERE area.id = ?;";
+    private static final String GET_AREA_BY_ID = "SELECT * FROM area WHERE area.id = ? NOT IN (SELECT area.id FROM cleared_areas);";
     private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_name, count FROM area_enemies WHERE area_enemies.area_id = ?;";
     private static final String GET_NUMBER_CLEARED_ROOMS = "SELECT COUNT(area_id) as num FROM cleared_areas WHERE cleared_area.player_id = ?;";
+    private static final String GET_ALL_CLEARED_AREAS = "SELECT * FROM cleared_areas WHERE cleared_area.player_id = ?;";
 
     private static final String CREATE_AREA_TABLE =
             "CREATE TABLE IF NOT EXISTS area(" +
@@ -119,11 +120,14 @@ public class AreaDAO extends DAOBase {
         }
     }
 
-    public List<Area> getAreasInLevelRange(int maxLevel, int numAreas) {
-        try(Connection connection = getDBConnection();
-            PreparedStatement statement = connection.prepareStatement(GET_ALL_AREAS)) {
+    public List<Area> getAreasInLevelRange(int maxLevel, int numAreas, String playerId) {
+        try(Connection connection = getDBConnection()){
+            PreparedStatement statement = connection.prepareStatement(GET_ALL_AREAS);
+            PreparedStatement clearedRooms = connection.prepareStatement(GET_ALL_CLEARED_AREAS);
+            clearedRooms.setString(1, playerId);
 
             ResultSet rs = statement.executeQuery();
+            ResultSet clearedrs = clearedRooms.executeQuery();
             List<Area> areas = new ArrayList<>();
             while(rs.next()) {
                 areas.add(makeArea(rs));
