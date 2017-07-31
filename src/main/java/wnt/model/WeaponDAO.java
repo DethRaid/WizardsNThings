@@ -18,6 +18,7 @@ public class WeaponDAO extends DAOBase {
             ",damage        INT             NOT NULL" +
             ",attack_speed  INT             NOT NULL" +
             ");";
+
     private static String GET_RANDOM_BAD_WEAPON =
             "SELECT * FROM weapon WHERE weapon.id IN (" +
                     "SELECT id FROM weapon " +
@@ -38,9 +39,6 @@ public class WeaponDAO extends DAOBase {
             connection.commit();
 
         } catch(SQLException e) {
-            if(e.getMessage().contains("Table \"WEAPON\" already exists")) {
-                return;
-            }
             throw new RuntimeException("Could not create table weapon", e);
         }
     }

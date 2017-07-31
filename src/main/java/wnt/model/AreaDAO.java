@@ -27,7 +27,8 @@ public class AreaDAO extends DAOBase {
                ",description    VARCHAR(512)    NOT NULL" +
                ",treasure_id    INT             NOT NULL" +
                ",FOREIGN KEY (treasure_id) REFERENCES treasure(id)" +
-                ");";
+                ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_AREA_ID ON area(id DESC);";
 
     private static final String CREATE_AREA_ENEMIES_TABLE =
             "CREATE TABLE IF NOT EXISTS area_enemies(" +
@@ -44,7 +45,8 @@ public class AreaDAO extends DAOBase {
             ",player_id VARCHAR(128)    NOT NULL" +
             ",FOREIGN KEY (area_id) REFERENCES area(id)" +
             ",FOREIGN KEY (player_id) REFERENCES player(name)" +
-            ");";
+            ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_CLEARED_AREAS_PLAYER_ID ON cleared_areas(player_id);";
 
     private final TreasureDAO treasureDAO = new TreasureDAO();
     private final EnemyDAO enemyDAO = new EnemyDAO();

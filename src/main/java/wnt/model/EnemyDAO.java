@@ -14,7 +14,8 @@ public class EnemyDAO extends DAOBase {
             "CREATE TABLE IF NOT EXISTS enemy(" +
                     "name VARCHAR(128)  NOT NULL PRIMARY KEY" +
                     ",level INT NOT NULL" +
-                    ");";
+                    ");" +
+                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_ENEMY_NAME ON enemy(name);";
 
     public static String GET_ENEMY = "SELECT * FROM enemy WHERE enemy.name = ?;";
 
@@ -37,9 +38,7 @@ public class EnemyDAO extends DAOBase {
             ResultSet enemySet = getEnemyStatement.executeQuery();
 
             if(enemySet.next()) {
-                Enemy enemy = new Enemy();
-                enemy.name = enemySet.getString("name");
-                enemy.level = enemySet.getInt("level");
+                Enemy enemy = new Enemy(enemySet.getString("name"), enemySet.getInt("level"));
 
                 return enemy;
             }
