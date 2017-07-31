@@ -108,6 +108,7 @@ public class AbilityDAO extends DAOBase {
     public List<Ability> getAbilitiesWithLevel(int level) {
         try(Connection connection = getDBConnection()) {
             PreparedStatement getAbilitiesStatement = connection.prepareStatement(GET_ABILITY_WITH_LEVEL);
+            getAbilitiesStatement.setInt(1, level);
             ResultSet rs = getAbilitiesStatement.executeQuery();
 
             List<Ability> abilities = new ArrayList<>();
