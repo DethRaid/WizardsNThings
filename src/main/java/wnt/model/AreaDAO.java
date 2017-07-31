@@ -123,11 +123,8 @@ public class AreaDAO extends DAOBase {
     public List<Area> getAreasInLevelRange(int maxLevel, int numAreas, String playerId) {
         try(Connection connection = getDBConnection()){
             PreparedStatement statement = connection.prepareStatement(GET_ALL_AREAS);
-            PreparedStatement clearedRooms = connection.prepareStatement(GET_ALL_CLEARED_AREAS);
-            clearedRooms.setString(1, playerId);
 
             ResultSet rs = statement.executeQuery();
-            ResultSet clearedrs = clearedRooms.executeQuery();
             List<Area> areas = new ArrayList<>();
             while(rs.next()) {
                 areas.add(makeArea(rs));

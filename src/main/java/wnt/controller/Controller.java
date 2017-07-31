@@ -84,7 +84,7 @@ public class Controller {
     public void createNewPlayer(String name){
         currentPlayer = new Player(name);
         currentPlayer.weapon = weaponDAO.getStartingWeapon();
-        currentPlayer.currentArea = areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 1).get(0);
+        currentPlayer.currentArea = areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 1, currentPlayer.name).get(0);
         currentPlayer.abilities.add(abilityDAO.getAbilitiesWithLevel(1).get(0));
         currentPlayer.save();
         area = currentPlayer.currentArea;
@@ -187,7 +187,7 @@ public class Controller {
      * @return a list of the possible areas
      */
     public List<Area> getPossibleAreas(){
-        return areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 4);
+        return areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 4, currentPlayer.name);
     }
 
     /**
