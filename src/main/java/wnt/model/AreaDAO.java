@@ -19,7 +19,6 @@ public class AreaDAO extends DAOBase {
     private static final String GET_AREA_BY_ID = "SELECT * FROM area WHERE area.id = ? NOT IN (SELECT area.id FROM cleared_areas);";
     private static final String GET_ENEMIES_IN_AREA = "SELECT enemy_name, count FROM area_enemies WHERE area_enemies.area_id = ?;";
     private static final String GET_NUMBER_CLEARED_ROOMS = "SELECT COUNT(area_id) as num FROM cleared_areas WHERE cleared_area.player_id = ?;";
-    private static final String GET_ALL_CLEARED_AREAS = "SELECT * FROM cleared_areas WHERE cleared_area.player_id = ?;";
 
     private static final String CREATE_AREA_TABLE =
             "CREATE TABLE IF NOT EXISTS area(" +
@@ -27,9 +26,9 @@ public class AreaDAO extends DAOBase {
                ",name           VARCHAR(255)    NOT NULL" +
                ",description    VARCHAR(512)    NOT NULL" +
                ",treasure_id    INT             NOT NULL" +
+               ",is_cleared    BOOLEAN             NOT NULL" +
                ",FOREIGN KEY (treasure_id) REFERENCES treasure(id)" +
-                ");" +
-                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_AREA_ID ON area(id DESC);";
+                ");";
 
     private static final String CREATE_AREA_ENEMIES_TABLE =
             "CREATE TABLE IF NOT EXISTS area_enemies(" +
@@ -46,8 +45,7 @@ public class AreaDAO extends DAOBase {
             ",player_id VARCHAR(128)    NOT NULL" +
             ",FOREIGN KEY (area_id) REFERENCES area(id)" +
             ",FOREIGN KEY (player_id) REFERENCES player(name)" +
-            ");" +
-                    "CREATE UNIQUE INDEX IF NOT EXISTS IDX_CLEARED_AREAS_PLAYER_ID ON cleared_areas(player_id);";
+            ");";
 
     private final TreasureDAO treasureDAO = new TreasureDAO();
     private final EnemyDAO enemyDAO = new EnemyDAO();

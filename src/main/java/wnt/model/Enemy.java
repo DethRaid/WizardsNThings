@@ -41,7 +41,7 @@ public class Enemy extends Observable implements ISaveable {
     }
 
     public void changeHealth(int healthChange) {
-        currentHealth = Math.min(currentHealth + healthChange, getMaxHealth());
+        currentHealth = Math.min(currentHealth - healthChange, getMaxHealth());
 
         if(currentHealth <= 0) {
             // TODO: Fire player dead event

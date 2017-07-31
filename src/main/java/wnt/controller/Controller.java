@@ -187,7 +187,9 @@ public class Controller {
      * @return a list of the possible areas
      */
     public List<Area> getPossibleAreas(){
-        return areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 4, currentPlayer.name);
+        List<Area> areas = areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 4, currentPlayer.name);
+        areas.removeIf(area -> area.isCleared == true);
+        return areas;
     }
 
     /**
@@ -301,7 +303,7 @@ public class Controller {
     private int calculatePlayerDamage(Enemy e){
         //TODO - Makes this more meaningful, such as account for defense and speed
         int rawDamage = (currentPlayer.strength + currentPlayer.weapon.damage + currentPlayer.weapon.attackSpeed);
-        return (Math.abs(rawDamage - e.getDefense()) * -1);
+        return (Math.abs(rawDamage) * -1);
     }
 
     public int rawDamage(){

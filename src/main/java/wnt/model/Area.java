@@ -18,9 +18,9 @@ public class Area extends Observable implements ISaveable {
             "INSERT INTO cleared_areas(area_id, player_id) values (?, ?);";
 
     private static final String SAVE =
-            "INSERT INTO area(id, name, description, treasure_id) VALUES (?, ?, ?, ?);";
+            "INSERT INTO area(id, name, description, treasure_id, is_cleared) VALUES (?, ?, ?, ?,?);";
 
-    private static final String SAVE_AREA_ANEMEIS =
+    private static final String SAVE_AREA_ENEMIES =
             "INSERT INTO area_enemies(enemy_name, area_id, count) VALUES (?, ?, ?);";
 
     public int id;
@@ -40,6 +40,7 @@ public class Area extends Observable implements ISaveable {
             saveStatement.setString(2, name);
             saveStatement.setString(3, description);
             saveStatement.setInt(4, treasure.id);
+            saveStatement.setBoolean(5, isCleared);
 
             saveStatement.execute();
             connection.commit();
@@ -49,7 +50,7 @@ public class Area extends Observable implements ISaveable {
         }
 
         try(Connection connection = getDBConnection();
-            PreparedStatement statement = connection.prepareStatement(SAVE_AREA_ANEMEIS)) {
+            PreparedStatement statement = connection.prepareStatement(SAVE_AREA_ENEMIES)) {
 
             for(Map.Entry<Enemy, Integer> entry : enemies.entrySet()) {
                 statement.setString(1, entry.getKey().name);
@@ -94,6 +95,7 @@ public class Area extends Observable implements ISaveable {
             statement.setString(2, playerName);
             statement.execute();
             connection.commit();
+            isCleared = true;
 
         } catch(SQLException e) {
             throw new RuntimeException("Could not set area " + id + " to be cleared by " + playerName, e);

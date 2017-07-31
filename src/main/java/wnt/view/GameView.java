@@ -5,8 +5,6 @@ import com.googlecode.lanterna.gui2.dialogs.ActionListDialog;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogResultValidator;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -17,8 +15,8 @@ import wnt.model.Area;
 import wnt.model.Enemy;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -321,25 +319,14 @@ public class GameView {
     private void renderPlayerOptionsRoom() {
         // obtain list of areas from controller, pick the top four
         List<Area> areas = controller.getPossibleAreas();
+        if(areas.size() == 0){
+            System.exit(0);
+        }
         new ActionListDialogBuilder()
                 .setTitle("Pick the next direction")
-                .setDescription("Around you, four doors open. Chose wisely...")
+                .setDescription("A door opens before you. Chose wisely...")
                 .addAction("North - " + areas.get(0).name, () -> {
                     controller.setCurrentArea(areas.get(0));
-                    renderArea();
-                })
-                .addAction("South - " + areas.get(1).name, () -> {
-                    controller.setCurrentArea(areas.get(1));
-                    renderArea();
-                })
-                .addAction("West - " + areas.get(2).name, () -> {
-                    // set currArea as cleared
-                    controller.setCurrentArea(areas.get(2));
-                    renderArea();
-                })
-                .addAction("East - " + areas.get(3).name, () -> {
-                    // set currArea as cleared
-                    controller.setCurrentArea(areas.get(3));
                     renderArea();
                 })
                 .setCanCancel(false)

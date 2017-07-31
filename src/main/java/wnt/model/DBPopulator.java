@@ -91,6 +91,7 @@ public class DBPopulator {
 
                 int treasureIndex = rand.nextInt(treasures.size());
                 area.treasure = treasures.get(treasureIndex);
+                area.isCleared = false;
 
                 area.save();
 
