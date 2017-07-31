@@ -62,7 +62,7 @@ public class DBPopulator {
             Treasure treasure = new Treasure();
             treasure.id = id;
             treasure.weapon = weapon;
-            treasure.name = weapon.name;
+            treasure.name = weapon.name + " of " + heroNames.get(rand.nextInt(heroNames.size()));
             treasure.save();
             treasures.add(treasure);
 

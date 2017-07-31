@@ -34,6 +34,9 @@ public class Controller {
         AbilityDAO.createTables();
         AreaDAO.createClearedAreasTable();
 
+        UsersDAO.createUsers();
+        UsersDAO.createPermissions();
+
         playerDAO = new PlayerDAO();
         areaDAO = new AreaDAO();
         enemyDAO = new EnemyDAO();
