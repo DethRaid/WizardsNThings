@@ -10,6 +10,7 @@ import java.util.*;
 public class Controller {
 
     //DAO's
+    private AbilityDAO abilityDAO = new AbilityDAO();
     private PlayerDAO playerDAO = new PlayerDAO();
     private AreaDAO areaDAO = new AreaDAO();
     private EnemyDAO enemyDAO = new EnemyDAO();
@@ -37,11 +38,13 @@ public class Controller {
         UsersDAO.createUsers();
         UsersDAO.createPermissions();
 
+
         playerDAO = new PlayerDAO();
         areaDAO = new AreaDAO();
         enemyDAO = new EnemyDAO();
         weaponDAO = new WeaponDAO();
         treasureDAO = new TreasureDAO();
+        abilityDAO = new AbilityDAO();
         if(!enemyDAO.hasExistingData()){
             DBPopulator.iReallyWantFreeFunctions();
         }
@@ -79,7 +82,7 @@ public class Controller {
         currentPlayer = new Player(name);
         currentPlayer.weapon = weaponDAO.getStartingWeapon();
         currentPlayer.currentArea = areaDAO.getAreasInLevelRange(Integer.parseInt(getLevel()), 1).get(0);
-
+        currentPlayer.abilities.add(abilityDAO.getAbilitiesWithLevel(1).get(0));
         currentPlayer.save();
         area = currentPlayer.currentArea;
         populateEnemies();
