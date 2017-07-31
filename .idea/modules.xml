@@ -3,8 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WizardsNThings.iml" filepath="$PROJECT_DIR$/.idea/modules/WizardsNThings.iml" />
+      <module fileurl="file://E:\Documents\WizardsNThings\WizardsNThings.iml" filepath="E:\Documents\WizardsNThings\WizardsNThings.iml" />
+      <module fileurl="file://E:\Documents\WizardsNThings\.idea\modules\WizardsNThings.iml" filepath="E:\Documents\WizardsNThings\.idea\modules\WizardsNThings.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WizardsNThings_main.iml" filepath="$PROJECT_DIR$/.idea/modules/WizardsNThings_main.iml" group="WizardsNThings" />
+      <module fileurl="file://E:\Documents\WizardsNThings\.idea\modules\WizardsNThings_main.iml" filepath="E:\Documents\WizardsNThings\.idea\modules\WizardsNThings_main.iml" group="WizardsNThings" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/WizardsNThings_test.iml" filepath="$PROJECT_DIR$/.idea/modules/WizardsNThings_test.iml" group="WizardsNThings" />
+      <module fileurl="file://E:\Documents\WizardsNThings\.idea\modules\WizardsNThings_test.iml" filepath="E:\Documents\WizardsNThings\.idea\modules\WizardsNThings_test.iml" group="WizardsNThings" />
     </modules>
   </component>
 </project>
