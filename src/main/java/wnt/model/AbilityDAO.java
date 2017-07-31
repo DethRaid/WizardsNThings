@@ -62,7 +62,7 @@ public class AbilityDAO extends DAOBase {
     public Ability getAbility(int abilityId) {
         try(Connection connection = getDBConnection()) {
             PreparedStatement getAbilityStatement = connection.prepareStatement(GET_ABILITY);
-            getAbilityStatement.setInt(0, abilityId);
+            getAbilityStatement.setInt(1, abilityId);
             ResultSet abilitySet = getAbilityStatement.executeQuery();
 
             return new Ability(abilitySet);
@@ -108,6 +108,7 @@ public class AbilityDAO extends DAOBase {
     public List<Ability> getAbilitiesWithLevel(int level) {
         try(Connection connection = getDBConnection()) {
             PreparedStatement getAbilitiesStatement = connection.prepareStatement(GET_ABILITY_WITH_LEVEL);
+            getAbilitiesStatement.setInt(1, level);
             ResultSet rs = getAbilitiesStatement.executeQuery();
 
             List<Ability> abilities = new ArrayList<>();

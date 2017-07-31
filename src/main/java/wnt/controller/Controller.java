@@ -69,6 +69,9 @@ public class Controller {
         if(area != null){area.setAreaAsCleared(currentPlayer.name);}
         area = a;
         currentPlayer.currentArea = a;
+        currentPlayer.maxHealth = currentPlayer.experience/100;
+        currentPlayer.currentHealth = currentPlayer.maxHealth;
+        currentPlayer.save();
         populateEnemies();
     }
 
@@ -218,16 +221,13 @@ public class Controller {
      * @param enemyId The target enemy
      */
     public void Attack(Integer enemyId){
-        enemies.forEach((id, enemy) -> {
-            if (id.equals(enemyId)){
-                enemy.changeHealth(calculatePlayerDamage(enemy) * -1);
-                if(enemy.isDead){
-                    enemies.remove(id, enemy);
-                    return;
-                }
-            }
-            currentPlayer.changeHealth(calculateEnemyDamage(enemy) * -1);
-        });
+        Enemy enemy = enemies.get(enemyId);
+        enemy.changeHealth(calculatePlayerDamage(enemy) * -1);
+        currentPlayer.changeHealth(calculateEnemyDamage(enemy));
+        if(enemy.isDead){
+            currentPlayer.experience += enemies.get(enemyId).level * 1000;
+            enemies.remove(enemyId);
+        }
     }
 
     /**
@@ -235,14 +235,20 @@ public class Controller {
      *
      * @param ability - the ability to cast
      */
-    public void castAbility(Ability ability){
+    public synchronized void castAbility(Ability ability){
         if(ability.damage > 0){
-            enemies.forEach((id ,enemy) -> {
-                enemy.changeHealth((ability.damage) * -1);
-                if(enemy.isDead){
-                    enemies.remove(id, enemy);
+            Iterator<Map.Entry<Integer, Enemy>> it = enemies.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry<Integer, Enemy> pair = it.next();
+                pair.getValue().changeHealth((ability.damage) * -1);
+                if(pair.getValue().isDead){
+                    currentPlayer.experience += enemies.get(pair.getKey()).level * 1000;
+                    it.remove();
                 }
-            });
+                else {
+                    currentPlayer.changeHealth(calculateEnemyDamage(pair.getValue()));
+                }
+            }
         }
         else if(ability.healthHealed > 0){
             currentPlayer.changeHealth(ability.healthHealed);
@@ -295,7 +301,11 @@ public class Controller {
     private int calculatePlayerDamage(Enemy e){
         //TODO - Makes this more meaningful, such as account for defense and speed
         int rawDamage = (currentPlayer.strength + currentPlayer.weapon.damage + currentPlayer.weapon.attackSpeed);
-        return ((rawDamage - e.getDefense()) * -1);
+        return (Math.abs(rawDamage - e.getDefense()) * -1);
+    }
+
+    public int rawDamage(){
+        return (currentPlayer.strength + currentPlayer.weapon.damage + currentPlayer.weapon.attackSpeed);
     }
 
     /**

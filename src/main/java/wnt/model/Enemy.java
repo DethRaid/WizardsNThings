@@ -45,6 +45,7 @@ public class Enemy extends Observable implements ISaveable {
 
         if(currentHealth <= 0) {
             // TODO: Fire player dead event
+            isDead = true;
         }
 
         setChanged();

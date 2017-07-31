@@ -1,6 +1,7 @@
 package wnt.model;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Puts a bunch of stuff in the database
@@ -104,11 +105,11 @@ public class DBPopulator {
             Ability ability = new Ability();
             ability.id = id;
             ability.name = abilityName;
-            ability.damage = rand.nextInt(150);
+            ability.damage = ThreadLocalRandom.current().nextInt(30, 150 + 1);
             ability.numTargets = rand.nextInt(5);
             ability.healthHealed = rand.nextBoolean() ? 0 : rand.nextInt(50);
             ability.description = "Super powerful";
-            ability.levelAvailableToPlayer = (ability.damage + ability.healthHealed) * ability.numTargets / 100;
+            ability.levelAvailableToPlayer = 1;
             ability.save();
             abilities.add(ability);
 
@@ -131,7 +132,7 @@ public class DBPopulator {
             int weaponIndex = rand.nextInt(weapons.size());
             player.weapon = weapons.get(weaponIndex);
 
-            for(int i = 0; i < player.experience / 1000; i++) {
+            for(int i = 1; i < player.experience / 1000; i++) {
                 int abilityIndex = rand.nextInt(abilities.size());
                 Ability ability = abilities.get(abilityIndex);
                 player.abilities.add(ability);

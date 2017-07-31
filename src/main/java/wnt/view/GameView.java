@@ -1,6 +1,7 @@
 package wnt.view;
 import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.gui2.*;
+import com.googlecode.lanterna.gui2.dialogs.ActionListDialog;
 import com.googlecode.lanterna.gui2.dialogs.ActionListDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogResultValidator;
@@ -16,6 +17,7 @@ import wnt.model.Area;
 import wnt.model.Enemy;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,8 @@ public class GameView {
     private static MultiWindowTextGUI gui;
     private static BasicWindow menuWindow;
     private static BasicWindow areaWindow;
+    private static ActionListDialog mainMenu;
+    private static boolean enemyPhase = false;
 
 
 
@@ -102,7 +106,7 @@ public class GameView {
      * Presents the menu dialog box for new game or listing previous saves
      * @throws IOException
      */
-    private void handleMainMenu() throws IOException{
+    private void handleMainMenu(){
         new ActionListDialogBuilder()
                 .setTitle("WizardsNThings")
                 .setDescription("Live out your fantasy as a wizard in this new\nand exciting text based dungeon crawler.")
@@ -117,11 +121,15 @@ public class GameView {
      * Creates a new player using inputted string and starts the game
      */
     private void startNewGame() {
+        try {
+            gui.updateScreen();
+        } catch(IOException e){}
+
         TextInputDialogResultValidator validator = new TextInputDialogResultValidator() {
             @Override
             public String validate(String content) {
                 Boolean valid = controller.getAllPlayers().contains(content);
-                if(!valid){
+                if(valid){
                     return "Player name already exists, please chose another name.";
                 }
                 return null;
@@ -133,15 +141,29 @@ public class GameView {
                 .setValidator(validator)
                 .build()
                 .showDialog(gui);
-
-        screen.clear();
+        if(player == null){
+            handleMainMenu();
+        }
         controller.createNewPlayer(player);
         renderArea();
     }
 
-    private void listPreviousSaves(){
-        // find list of players from database
+    private void startGame(String player){
+        controller.setCurrentPlayer(player);
+        renderArea();
+    }
 
+    private void listPreviousSaves(){
+        BasicWindow playerWindow = new BasicWindow("Previous Saves");
+        ActionListBox list = new ActionListBox();
+        controller.getAllPlayers().forEach((player) -> {
+            list.addItem(player, () -> {
+                startGame(player);
+            });
+        });
+        list.addItem("Cancel", this::handleMainMenu);
+        playerWindow.setComponent(list);
+        gui.addWindowAndWait(playerWindow);
     }
 
     /**
@@ -162,7 +184,7 @@ public class GameView {
 
         Label description = new Label(controller.getCurrentArea().description);
         long alive = controller.getAllEnemies().values().stream().filter(d -> !d.isDead).count();
-        Label enemies =  new Label("Before you stands " + alive + " enemies!");
+        Label enemies = alive == 0 ? new Label(" ") : new Label("Before you stands " + alive + " enemies!");
 
         Panel panel = Panels.grid(3,
                 description,
@@ -173,9 +195,14 @@ public class GameView {
                 new Separator(Direction.VERTICAL),
                 new Label("Health: " + controller.getHP()),
 
+
                 new Label(""),
                 new Separator(Direction.VERTICAL),
-                new Label("Exp: " + controller.getExperience() + "/1000"));
+                new Label("Exp: " + controller.getExperience() + "/1000"),
+
+                new Label(""),
+                new Separator(Direction.VERTICAL),
+                new Label("Level: " + controller.getLevel()));
 
         controller.getAllEnemies().forEach((id, enemy) -> {
             panel.addComponent(new Label(enemy.name + " - " + enemy.currentHealth + " current HP"));
@@ -185,9 +212,19 @@ public class GameView {
         panel.addComponent(new Separator(Direction.HORIZONTAL));
         titlePane.addComponent(panel);
 
+
         areaWindow = new BasicWindow("WizardsNThings");
         areaWindow.setHints(Arrays.asList(Window.Hint.FULL_SCREEN));
         areaWindow.setComponent(titlePane);
+        gui.addWindow(areaWindow);
+        gui.setActiveWindow(areaWindow);
+
+        if(alive == 0){
+            renderTreasureDescription();
+        }
+        else{
+            renderPlayerOptionsCombat();
+        }
     }
 
     /**
@@ -218,40 +255,59 @@ public class GameView {
         new ActionListDialogBuilder()
                 .setTitle("Combat Phase")
                 .setDescription("Defeat the enemies to move forward!")
-                .addAction("Attack with " + controller.getCurrentWeapon(), this::selectPlayerTarget)
-                .addAction("Select Ability", this::selectPlayerAbility)
+                .addAction("Attack with " + controller.getCurrentWeapon() + " - "
+                        + controller.rawDamage() + " damage", this::selectPlayerTarget)
+                .addAction("Select Ability" , this::selectPlayerAbility)
+                .setCanCancel(false)
                 .build()
                 .showDialog(gui);
+
     }
 
     /**
      * Selects enemy for player to attack
      */
     public void selectPlayerTarget(){
+        BasicWindow playerWindow = new BasicWindow("Select Target");
         Map<Integer, Enemy> enemies = controller.getAllEnemies();
         ActionListBox list = new ActionListBox();
         enemies.forEach((id, enemy) -> {
             list.addItem(enemy.name + " " + id, () -> {
                 controller.Attack(id);
+                enemyPhase = true;
+                playerWindow.setVisible(false);
                 renderArea();
             });
         });
-
+        playerWindow.setComponent(list);
+        gui.addWindowAndWait(playerWindow);
     }
 
     /**
      * Select player ability during combat phase
      */
     public void selectPlayerAbility() {
+        BasicWindow playerWindow = new BasicWindow("Select Abilities");
         List<Ability> abilities = controller.getAbilities();
         ActionListBox list = new ActionListBox();
         abilities.forEach((ability) -> {
-            list.addItem(ability.name, () -> {
+            String abilityDescription = "";
+            if(ability.healthHealed > 0) {
+               abilityDescription = ability.name + " - +" + ability.healthHealed + "HP to player";
+            }
+            else{
+               abilityDescription = ability.name + " - " + ability.damage + " damage to all enemies";
+            }
+            list.addItem(abilityDescription, () -> {
                controller.castAbility(ability);
-                renderArea();
+               enemyPhase = true;
+               playerWindow.setVisible(false);
+               renderArea();
             });
         });
         list.addItem("Cancel", this::renderPlayerOptionsCombat);
+        playerWindow.setComponent(list);
+        gui.addWindowAndWait(playerWindow);
     }
 
     /**
@@ -268,20 +324,20 @@ public class GameView {
         new ActionListDialogBuilder()
                 .setTitle("Pick the next direction")
                 .setDescription("Around you, four doors open. Chose wisely...")
-                .addAction("North - " + areas.get(0).description, () -> {
+                .addAction("North - " + areas.get(0).name, () -> {
                     controller.setCurrentArea(areas.get(0));
                     renderArea();
                 })
-                .addAction("South - " + areas.get(1).description, () -> {
+                .addAction("South - " + areas.get(1).name, () -> {
                     controller.setCurrentArea(areas.get(1));
                     renderArea();
                 })
-                .addAction("West - " + areas.get(2).description, () -> {
+                .addAction("West - " + areas.get(2).name, () -> {
                     // set currArea as cleared
                     controller.setCurrentArea(areas.get(2));
                     renderArea();
                 })
-                .addAction("East - " + areas.get(3).description, () -> {
+                .addAction("East - " + areas.get(3).name, () -> {
                     // set currArea as cleared
                     controller.setCurrentArea(areas.get(3));
                     renderArea();

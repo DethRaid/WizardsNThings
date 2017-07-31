@@ -89,6 +89,7 @@ public class AreaDAO extends DAOBase {
 
         try(Connection connection = getDBConnection();
             PreparedStatement getAreaStatement = connection.prepareStatement(GET_AREA_BY_ID)) {
+            getAreaStatement.setInt(1, areaId);
 
             ResultSet areaResult = getAreaStatement.executeQuery();
             if(!areaResult.next()) {
